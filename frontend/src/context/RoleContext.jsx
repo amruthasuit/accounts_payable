@@ -5,11 +5,11 @@ const RoleContext = createContext();
 export const ROLES = [
   { 
     id: 'admin', 
-    name: 'Sharath Verma', 
+    name: 'Sharath Chandra', 
     email: 'admin@templegate.com',
     role: 'Admin', 
     department: 'Finance & Systems', 
-    initials: 'SV',
+    initials: 'SC',
     approvalLimit: 'Unlimited',
     description: 'System Administrator & Controller'
   },

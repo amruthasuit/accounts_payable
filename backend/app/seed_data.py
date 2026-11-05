@@ -30,7 +30,7 @@ def seed_database(db: Session):
 
     # 2. Users
     users = [
-        User(name="Sharath (Admin)", email="admin@templegate.com", role="Admin", department="Executive"),
+        User(name="Sharath Chandra (Admin)", email="admin@templegate.com", role="Admin", department="Executive"),
         User(name="Priya Sharma (AP Clerk)", email="priya.ap@templegate.com", role="AP Clerk", department="Finance"),
         User(name="Rahul Verma (IT Manager)", email="rahul.it@templegate.com", role="Approver", department="IT"),
         User(name="Anita Desai (Operations Lead)", email="anita.ops@templegate.com", role="Approver", department="Operations"),
