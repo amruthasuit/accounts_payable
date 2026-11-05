@@ -75,96 +75,99 @@ export const ApprovalsPage = ({ setActiveTab, setSelectedInvoiceId }) => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#232936] pb-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Invoice Approval Queue</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Role-based authorization queue according to fiscal limits and departmental matrix policies.
+          <div className="flex items-center space-x-2">
+            <span className="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+            <h1 className="text-lg font-semibold text-[#E5E9F0] tracking-tight">Invoice Authorization & Sign-off Queue</h1>
+          </div>
+          <p className="text-xs text-[#7E8799] mt-0.5">
+            Role-based authorization queue according to fiscal limits and departmental matrix policies
           </p>
         </div>
 
         {/* Sub-tab Navigation */}
-        <div className="flex items-center space-x-1 bg-slate-200/80 p-1 rounded-lg text-xs font-medium">
+        <div className="flex items-center space-x-1 bg-[#121620] p-1 rounded-sm border border-[#232936] text-xs">
           <button
             onClick={() => setActiveSubTab('inbox')}
-            className={`px-3 py-1.5 rounded-md transition ${
-              activeSubTab === 'inbox' ? 'bg-white text-slate-900 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
+            className={`px-3 py-1 rounded-xs transition text-xs font-medium ${
+              activeSubTab === 'inbox' ? 'bg-[#1E2534] text-white border border-[#2E374A]' : 'text-[#8C96A8] hover:text-[#E5E9F0]'
             }`}
           >
-            Pending Queue ({inboxInvoices.length})
+            Pending queue ({inboxInvoices.length})
           </button>
           <button
             onClick={() => setActiveSubTab('matrix')}
-            className={`px-3 py-1.5 rounded-md transition ${
-              activeSubTab === 'matrix' ? 'bg-white text-slate-900 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
+            className={`px-3 py-1 rounded-xs transition text-xs font-medium ${
+              activeSubTab === 'matrix' ? 'bg-[#1E2534] text-white border border-[#2E374A]' : 'text-[#8C96A8] hover:text-[#E5E9F0]'
             }`}
           >
-            Policy Threshold Matrix
+            Policy threshold matrix
           </button>
         </div>
       </div>
 
       {message && (
-        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs flex items-center space-x-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+        <div className="p-3 bg-[#0D9488]/15 border border-[#0D9488]/30 rounded-sm text-[#2DD4BF] text-xs flex items-center space-x-2">
+          <CheckCircle2 className="w-4 h-4 text-[#2DD4BF] shrink-0" />
           <span>{message}</span>
         </div>
       )}
 
       {/* Approver Context Ribbon */}
-      <div className="bg-slate-900 text-white px-4 py-2.5 rounded-lg flex items-center justify-between text-xs">
+      <div className="bg-[#121620] border border-[#232936] px-4 py-2.5 rounded-sm flex items-center justify-between text-xs">
         <div className="flex items-center space-x-2">
-          <span className="text-slate-400">Signed In As:</span>
-          <strong className="text-slate-200 font-semibold">{currentUser.name}</strong>
-          <span className="text-slate-400 font-mono text-[11px]">({currentUser.role} • Limit: {currentUser.approvalLimit})</span>
+          <span className="text-[#7E8799]">Signed in as:</span>
+          <strong className="text-[#E5E9F0] font-medium">{currentUser.name}</strong>
+          <span className="text-[#8C96A8] font-mono text-[11px]">({currentUser.role} / Limit: {currentUser.approvalLimit})</span>
         </div>
-        <div className="text-[11px] text-slate-400 font-mono">
-          Queue Scope: {currentUser.role === 'Admin' ? 'All Roles (Admin Privilege)' : currentUser.role}
+        <div className="text-[11px] text-[#64718A] font-mono">
+          Scope: {currentUser.role === 'Admin' ? 'All tiers (administrative bypass enabled)' : currentUser.role}
         </div>
       </div>
 
       {loading ? (
         <div className="flex items-center justify-center p-12">
-          <RefreshCw className="w-7 h-7 text-sky-600 animate-spin" />
+          <RefreshCw className="w-6 h-6 text-[#0D9488] animate-spin" />
         </div>
       ) : activeSubTab === 'inbox' ? (
         inboxInvoices.length === 0 ? (
-          <div className="p-12 text-center bg-white rounded-xl border border-slate-200 space-y-2">
-            <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto" />
-            <h3 className="text-sm font-bold text-slate-800">Queue is Clear</h3>
-            <p className="text-xs text-slate-500">No invoices currently awaiting sign-off for {currentUser.role}.</p>
+          <div className="p-12 text-center bg-[#121620] rounded-sm border border-[#232936] space-y-2">
+            <CheckCircle2 className="w-7 h-7 text-[#2DD4BF] mx-auto" />
+            <h3 className="text-xs font-semibold text-[#E5E9F0]">Queue clear</h3>
+            <p className="text-[11px] text-[#7E8799]">No invoices currently awaiting sign-off for {currentUser.role}.</p>
           </div>
         ) : (
-          <div className="space-y-3.5">
+          <div className="space-y-3">
             {inboxInvoices.map((inv) => (
-              <div key={inv.id} className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs hover:border-slate-300 transition space-y-3.5">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-100 pb-3">
+              <div key={inv.id} className="bg-[#121620] p-4 rounded-sm border border-[#232936] hover:border-[#282F3E] transition space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-[#1E2534] pb-2.5">
                   <div className="flex items-center space-x-2.5">
                     <button
                       onClick={() => {
                         setSelectedInvoiceId(inv.id);
                         setActiveTab('invoices');
                       }}
-                      className="font-mono font-bold text-sm text-sky-700 hover:text-sky-900 hover:underline"
+                      className="font-mono font-medium text-xs text-[#2DD4BF] hover:underline"
                     >
                       #{inv.invoice_number}
                     </button>
-                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded-xs border ${
                       inv.is_escalated 
-                        ? 'bg-red-50 text-red-700 border border-red-200' 
-                        : 'bg-amber-50 text-amber-800 border border-amber-200'
+                        ? 'bg-[#EF4444]/15 text-[#F87171] border-[#EF4444]/30' 
+                        : 'bg-[#F59E0B]/15 text-[#FBBF24] border-[#F59E0B]/30'
                     }`}>
-                      {inv.is_escalated ? 'Escalated to Executive' : inv.status}
+                      {inv.is_escalated ? 'Escalated to executive' : inv.status}
                     </span>
-                    <span className="text-[10px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
+                    <span className="text-[10px] font-mono bg-[#181D28] text-[#8C96A8] px-2 py-0.5 rounded-xs border border-[#232936]">
                       Step {inv.current_approval_step}: {inv.assigned_to_role}
                     </span>
                   </div>
 
                   <div className="text-right flex items-center space-x-3">
                     <div>
-                      <span className="text-[10px] text-slate-400 uppercase font-semibold">Payable Gross</span>
-                      <div className="text-base font-bold font-mono text-slate-900">
+                      <span className="text-[10px] text-[#64718A] block font-mono">Gross payable</span>
+                      <div className="text-sm font-semibold font-mono text-[#E5E9F0]">
                         ₹{(inv.total_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                       </div>
                     </div>
@@ -174,55 +177,55 @@ export const ApprovalsPage = ({ setActiveTab, setSelectedInvoiceId }) => {
                 {/* Details Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                   <div>
-                    <span className="text-slate-400 block text-[10px] uppercase font-semibold">Vendor</span>
-                    <span className="font-semibold text-slate-900 truncate block">{inv.vendor_name_raw}</span>
+                    <span className="text-[#64718A] block text-[10px] font-mono">Vendor</span>
+                    <span className="font-medium text-[#E5E9F0] truncate block">{inv.vendor_name_raw}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] uppercase font-semibold">PO Number</span>
-                    <span className="font-mono text-slate-700">{inv.po_number_raw || 'No PO Attached'}</span>
+                    <span className="text-[#64718A] block text-[10px] font-mono">PO number</span>
+                    <span className="font-mono text-[#C4CBD8]">{inv.po_number_raw || 'No PO attached'}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] uppercase font-semibold">Matching Verification</span>
-                    <span className="font-medium text-slate-800 font-mono">{inv.match_status}</span>
+                    <span className="text-[#64718A] block text-[10px] font-mono">Matching verification</span>
+                    <span className="font-mono text-[#2DD4BF]">{inv.match_status}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] uppercase font-semibold">OCR Quality</span>
-                    <span className="font-semibold text-slate-800 font-mono">{inv.ocr_accuracy_score}% Accuracy</span>
+                    <span className="text-[#64718A] block text-[10px] font-mono">OCR score</span>
+                    <span className="font-mono text-[#E5E9F0]">{inv.ocr_accuracy_score}%</span>
                   </div>
                 </div>
 
                 {inv.escalation_reason && (
-                  <div className="p-3 bg-red-50/70 border border-red-200 rounded-lg text-red-800 text-xs flex items-center space-x-2">
-                    <AlertTriangle className="w-4 h-4 shrink-0 text-red-600" />
-                    <span><strong>Escalation Flag:</strong> {inv.escalation_reason}</span>
+                  <div className="p-2.5 bg-[#EF4444]/10 border border-[#EF4444]/30 rounded-sm text-[#F87171] text-xs flex items-center space-x-2">
+                    <AlertTriangle className="w-4 h-4 shrink-0 text-[#EF4444]" />
+                    <span><strong>Escalation note:</strong> {inv.escalation_reason}</span>
                   </div>
                 )}
 
                 {/* Approval Comments & Action Buttons */}
-                <div className="flex flex-col md:flex-row items-center gap-2.5 pt-3 border-t border-slate-100">
+                <div className="flex flex-col md:flex-row items-center gap-2 pt-2.5 border-t border-[#1E2534]">
                   <input
                     type="text"
-                    placeholder="Enter approval / rejection remarks..."
+                    placeholder="Enter approval note or sign-off reasoning..."
                     value={commentsMap[inv.id] || ''}
                     onChange={(e) => setCommentsMap({ ...commentsMap, [inv.id]: e.target.value })}
-                    className="w-full md:flex-1 bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 outline-none focus:bg-white focus:border-slate-800"
+                    className="w-full md:flex-1 bg-[#181D28] border border-[#282F3E] rounded-sm px-3 py-1.5 text-xs text-[#E5E9F0] outline-none focus:border-[#0D9488]"
                   />
 
-                  <div className="flex items-center space-x-2 w-full md:w-auto justify-end">
+                  <div className="flex items-center space-x-1.5 w-full md:w-auto justify-end">
                     <button
                       onClick={() => handleAction(inv.id, 'REMINDER')}
                       disabled={actionLoading === `${inv.id}-REMINDER`}
-                      className="px-2.5 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 rounded-lg text-xs font-medium transition flex items-center gap-1 shadow-2xs"
-                      title="Send notification reminder"
+                      className="px-2.5 py-1.5 bg-[#181D28] hover:bg-[#1E2534] border border-[#282F3E] text-[#C4CBD8] rounded-sm text-xs font-medium transition flex items-center gap-1"
+                      title="Send reminder notice"
                     >
-                      <Bell className="w-3.5 h-3.5 text-slate-500" />
+                      <Bell className="w-3.5 h-3.5 text-[#7E8799]" />
                       <span>Remind</span>
                     </button>
 
                     <button
                       onClick={() => handleAction(inv.id, 'ESCALATE')}
                       disabled={actionLoading === `${inv.id}-ESCALATE`}
-                      className="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-lg text-xs font-medium transition"
+                      className="px-2.5 py-1.5 bg-[#F59E0B]/15 hover:bg-[#F59E0B]/25 text-[#FBBF24] border border-[#F59E0B]/30 rounded-sm text-xs font-medium transition"
                     >
                       Escalate
                     </button>
@@ -230,7 +233,7 @@ export const ApprovalsPage = ({ setActiveTab, setSelectedInvoiceId }) => {
                     <button
                       onClick={() => handleAction(inv.id, 'REJECT')}
                       disabled={actionLoading === `${inv.id}-REJECT`}
-                      className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-lg text-xs font-medium transition"
+                      className="px-2.5 py-1.5 bg-[#EF4444]/15 hover:bg-[#EF4444]/25 text-[#F87171] border border-[#EF4444]/30 rounded-sm text-xs font-medium transition"
                     >
                       Reject
                     </button>
@@ -238,7 +241,7 @@ export const ApprovalsPage = ({ setActiveTab, setSelectedInvoiceId }) => {
                     <button
                       onClick={() => handleAction(inv.id, 'APPROVE')}
                       disabled={actionLoading === `${inv.id}-APPROVE`}
-                      className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold shadow-xs transition flex items-center gap-1.5"
+                      className="px-3.5 py-1.5 bg-[#0D9488] hover:bg-[#0F766E] text-white rounded-sm text-xs font-medium shadow-2xs transition flex items-center gap-1.5"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>Sign-off</span>
@@ -251,38 +254,38 @@ export const ApprovalsPage = ({ setActiveTab, setSelectedInvoiceId }) => {
         )
       ) : (
         /* APPROVAL POLICY MATRIX TABLE */
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-3">
-          <div>
-            <h2 className="text-sm font-bold text-slate-900">Configured Authorization Threshold Policies</h2>
-            <p className="text-xs text-slate-500">
-              Corporate approval thresholds based on invoice monetary value, cost center, and SLA expectations.
+        <div className="bg-[#121620] p-4 rounded-sm border border-[#232936] space-y-3">
+          <div className="border-b border-[#1E2534] pb-2.5">
+            <h2 className="text-xs font-semibold text-[#E5E9F0]">Configured authorization threshold policies</h2>
+            <p className="text-[11px] text-[#7E8799]">
+              Corporate approval tiers based on invoice monetary value, cost center, and SLA expectations
             </p>
           </div>
 
-          <div className="overflow-x-auto border border-slate-200 rounded-lg">
+          <div className="overflow-x-auto border border-[#232936] rounded-sm">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-slate-50 text-[10px] font-semibold text-slate-500 uppercase border-b">
-                  <th className="py-2.5 px-3">Policy Tier</th>
-                  <th className="py-2.5 px-3">Min Amount</th>
-                  <th className="py-2.5 px-3">Max Amount</th>
-                  <th className="py-2.5 px-3">Department</th>
-                  <th className="py-2.5 px-3">Authorized Role</th>
-                  <th className="py-2.5 px-3 text-center">SLA Target</th>
-                  <th className="py-2.5 px-3 text-center">Policy Status</th>
+                <tr className="bg-[#181D28] text-[10px] text-[#8C96A8] border-b border-[#232936]">
+                  <th className="py-2.5 px-3 font-medium">Policy tier</th>
+                  <th className="py-2.5 px-3 font-medium">Min amount</th>
+                  <th className="py-2.5 px-3 font-medium">Max amount</th>
+                  <th className="py-2.5 px-3 font-medium">Department</th>
+                  <th className="py-2.5 px-3 font-medium">Authorized role</th>
+                  <th className="py-2.5 px-3 text-center font-medium">SLA benchmark</th>
+                  <th className="py-2.5 px-3 text-center font-medium">Policy status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 font-mono text-[11px]">
+              <tbody className="divide-y divide-[#1E2534] font-mono text-[11px]">
                 {matrixRules.map((rule) => (
-                  <tr key={rule.id} className="hover:bg-slate-50/50">
-                    <td className="py-2.5 px-3 font-sans font-bold text-slate-900">Step {rule.step_number}</td>
+                  <tr key={rule.id} className="hover:bg-[#181D28]/60 transition">
+                    <td className="py-2.5 px-3 font-sans font-medium text-[#E5E9F0]">Step {rule.step_number}</td>
                     <td className="py-2.5 px-3">₹{rule.min_amount.toLocaleString('en-IN')}</td>
                     <td className="py-2.5 px-3">₹{rule.max_amount.toLocaleString('en-IN')}</td>
-                    <td className="py-2.5 px-3 font-sans text-slate-700">{rule.department}</td>
-                    <td className="py-2.5 px-3 font-sans font-semibold text-slate-900">{rule.required_role}</td>
-                    <td className="py-2.5 px-3 text-center text-slate-600">{rule.sla_hours} Hours</td>
+                    <td className="py-2.5 px-3 font-sans text-[#8C96A8]">{rule.department}</td>
+                    <td className="py-2.5 px-3 font-sans font-medium text-[#C4CBD8]">{rule.required_role}</td>
+                    <td className="py-2.5 px-3 text-center text-[#8C96A8]">{rule.sla_hours} hours</td>
                     <td className="py-2.5 px-3 text-center">
-                      <span className="text-[10px] font-sans font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                      <span className="text-[10px] font-mono text-[#2DD4BF] bg-[#0D9488]/15 px-2 py-0.5 rounded-xs border border-[#0D9488]/30">
                         Active
                       </span>
                     </td>

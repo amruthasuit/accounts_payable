@@ -11,204 +11,168 @@ import {
   BarChart3, 
   RefreshCw,
   Search,
-  Bell,
   ChevronDown,
-  Shield,
-  HelpCircle,
-  Plus,
-  Sparkles,
-  Layers,
-  ArrowUpRight
+  Plus
 } from 'lucide-react';
 
-export const Navbar = ({ activeTab, setActiveTab, onQuickUpload }) => {
+export const Navbar = ({ activeTab, setActiveTab }) => {
   const { currentUser, setCurrentUser, ROLES, currentEntity } = useRole();
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
-  const navSections = [
-    {
-      title: 'CORE AP',
-      items: [
-        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { id: 'invoices', label: 'Invoices', icon: FileText, count: 5 },
-        { id: 'capture', label: 'Capture & Ingest', icon: UploadCloud },
-      ]
-    },
-    {
-      title: 'RECONCILIATION & APPROVALS',
-      items: [
-        { id: 'matching', label: 'PO & GRN Matching', icon: GitCompare },
-        { id: 'approvals', label: 'Approval Queue', icon: CheckSquare, badge: '2 Pending' },
-      ]
-    },
-    {
-      title: 'VENDORS & SETTLEMENT',
-      items: [
-        { id: 'vendors', label: 'Vendor Registry', icon: Building2 },
-        { id: 'payments', label: 'Payment Runs', icon: CreditCard },
-      ]
-    },
-    {
-      title: 'ACCOUNTING & COMPLIANCE',
-      items: [
-        { id: 'reports', label: 'Reports & Audits', icon: BarChart3 },
-        { id: 'erp', label: 'ERP & GL Sync', icon: RefreshCw },
-      ]
-    }
+  const navItems = [
+    { id: 'dashboard', label: 'Ledger', icon: LayoutDashboard },
+    { id: 'invoices', label: 'Invoices', icon: FileText, count: 5 },
+    { id: 'capture', label: 'Intake', icon: UploadCloud },
+    { id: 'matching', label: 'Reconciliation', icon: GitCompare },
+    { id: 'approvals', label: 'Approvals', icon: CheckSquare, badge: '2' },
+    { id: 'vendors', label: 'Vendors', icon: Building2 },
+    { id: 'payments', label: 'Payments', icon: CreditCard },
+    { id: 'reports', label: 'Reports', icon: BarChart3 },
+    { id: 'erp', label: 'ERP Sync', icon: RefreshCw },
   ];
 
   return (
-    <>
+    <header className="bg-[#121620] border-b border-[#232936] text-[#E5E9F0] sticky top-0 z-40 select-none">
       {/* Top Application Bar */}
-      <header className="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-40 select-none shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14">
-            {/* Left: Brand & Entity */}
-            <div className="flex items-center space-x-6">
-              <div 
-                className="flex items-center space-x-2.5 cursor-pointer"
-                onClick={() => setActiveTab('dashboard')}
-              >
-                <div className="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center font-bold text-white tracking-wider text-sm shadow-sm">
-                  TG
-                </div>
-                <div className="flex flex-col">
-                  <div className="flex items-center space-x-2">
-                    <span className="font-semibold text-sm tracking-tight text-white">Templegate AP</span>
-                    <span className="text-[10px] font-mono text-slate-400 bg-slate-800 px-1.5 py-0.2 rounded border border-slate-700/60">
-                      Enterprise
-                    </span>
-                  </div>
-                  <span className="text-[11px] text-slate-400 font-mono hidden sm:inline">
-                    {currentEntity.name.split(' ')[0]} • GSTIN: {currentEntity.gstin.slice(0, 7)}...
-                  </span>
-                </div>
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between h-14">
+          {/* Left: Brand Identity */}
+          <div className="flex items-center space-x-6">
+            <button 
+              className="flex items-center space-x-2.5 text-left focus:outline-none"
+              onClick={() => setActiveTab('dashboard')}
+            >
+              <div className="w-7 h-7 rounded-sm bg-[#0D9488] flex items-center justify-center font-mono font-bold text-white text-xs tracking-wider">
+                TG
               </div>
-
-              {/* Entity Indicator Badge */}
-              <div className="hidden lg:flex items-center space-x-1.5 bg-slate-800/80 px-2.5 py-1 rounded-md text-[11px] text-slate-300 border border-slate-700/50">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span className="font-medium">FY 2026-27</span>
-                <span className="text-slate-500">•</span>
-                <span className="font-mono text-slate-400">{currentEntity.currency}</span>
+              <div>
+                <div className="font-semibold text-xs text-white tracking-tight leading-tight">Templegate Ledger</div>
+                <div className="text-[11px] text-[#7E8799] font-mono leading-tight">FY 2026-27 / INR</div>
               </div>
-            </div>
+            </button>
 
-            {/* Middle: Global Search */}
-            <div className="hidden md:flex items-center flex-1 max-w-md mx-6">
-              <div className="w-full relative">
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Search invoices, vendors, PO numbers (Ctrl + K)..."
-                  className="w-full bg-slate-800/70 text-xs text-slate-200 placeholder-slate-400 pl-8 pr-12 py-1.5 rounded-lg border border-slate-700/70 focus:outline-none focus:border-sky-500 focus:bg-slate-800 transition"
-                />
-                <span className="text-[10px] font-mono text-slate-400 border border-slate-700 bg-slate-800 px-1.5 py-0.5 rounded absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
-                  ⌘K
-                </span>
-              </div>
-            </div>
-
-            {/* Right: Quick Ingest + Notifications + Persona Switcher */}
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={() => setActiveTab('capture')}
-                className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-semibold shadow-sm transition"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Upload Invoice</span>
-              </button>
-
-              <div className="h-4 w-px bg-slate-700 hidden sm:block"></div>
-
-              {/* Persona Selector Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center space-x-2 px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700/80 border border-slate-700 rounded-lg text-left transition"
-                >
-                  <div className="w-6 h-6 rounded-md bg-gradient-to-tr from-slate-700 to-slate-600 flex items-center justify-center text-[10px] font-bold text-sky-300 font-mono">
-                    {currentUser.initials}
-                  </div>
-                  <div className="hidden sm:block text-left">
-                    <div className="text-xs font-medium text-slate-200 leading-tight">{currentUser.name}</div>
-                    <div className="text-[10px] text-slate-400">{currentUser.role}</div>
-                  </div>
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-                </button>
-
-                {userDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50 text-slate-800">
-                    <div className="px-3.5 py-2 border-b border-slate-100">
-                      <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Active Workspace Persona</div>
-                      <div className="font-bold text-xs text-slate-900 mt-0.5">{currentUser.name}</div>
-                      <div className="text-[11px] text-slate-500">{currentUser.department} • Limit: {currentUser.approvalLimit}</div>
-                    </div>
-
-                    <div className="px-2 py-1.5">
-                      <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider px-2 py-1">Switch Role Persona</div>
-                      {ROLES.map((r) => (
-                        <button
-                          key={r.id}
-                          onClick={() => {
-                            setCurrentUser(r);
-                            setUserDropdownOpen(false);
-                          }}
-                          className={`w-full flex items-center space-x-2.5 px-2.5 py-2 rounded-lg text-left text-xs transition ${
-                            currentUser.id === r.id ? 'bg-sky-50 text-sky-900 font-semibold' : 'text-slate-700 hover:bg-slate-50'
-                          }`}
-                        >
-                          <div className="w-6 h-6 rounded bg-slate-200 text-slate-700 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
-                            {r.initials}
-                          </div>
-                          <div className="truncate">
-                            <div className="leading-tight truncate">{r.name}</div>
-                            <div className="text-[10px] text-slate-400 leading-tight">{r.role} • {r.department}</div>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+            {/* Jurisdiction Badge */}
+            <div className="hidden lg:flex items-center space-x-2 px-2.5 py-1 bg-[#181D28] border border-[#232936] rounded-sm text-[11px] font-mono text-[#8C96A8]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0D9488]"></span>
+              <span>GSTIN {currentEntity.gstin}</span>
             </div>
           </div>
-        </div>
 
-        {/* Primary Sub-Navigation Bar */}
-        <nav className="bg-slate-900/90 border-t border-slate-800/80 overflow-x-auto scrollbar-none px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto flex items-center space-x-1 py-1.5">
-            {navSections.flatMap(s => s.items).map((item) => {
+          {/* Center: Primary Navigation */}
+          <nav className="hidden md:flex items-center space-x-0.5">
+            {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center space-x-2 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
+                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-sm text-xs transition-colors font-medium ${
                     isActive
-                      ? 'bg-slate-800 text-white shadow-xs font-semibold'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                      ? 'bg-[#1E2534] text-white shadow-2xs border border-[#2E374A]'
+                      : 'text-[#8C96A8] hover:text-[#E5E9F0] hover:bg-[#181D28]'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-sky-400' : 'text-slate-400'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#2DD4BF]' : 'text-[#7E8799]'}`} />
                   <span>{item.label}</span>
                   {item.badge && (
-                    <span className="text-[10px] font-medium bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.2 rounded">
+                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-xs bg-[#F59E0B]/20 text-[#FBBF24] border border-[#F59E0B]/30 font-semibold">
                       {item.badge}
                     </span>
                   )}
-                  {item.count && (
-                    <span className="text-[10px] text-slate-400 font-mono bg-slate-800 px-1.5 py-0.2 rounded">
+                  {item.count && !item.badge && (
+                    <span className="text-[10px] font-mono px-1 py-0.2 text-[#7E8799]">
                       {item.count}
                     </span>
                   )}
                 </button>
               );
             })}
+          </nav>
+
+          {/* Right: Actions & User Persona */}
+          <div className="flex items-center space-x-2.5">
+            <button
+              onClick={() => setActiveTab('capture')}
+              className="flex items-center space-x-1 px-2.5 py-1.5 bg-[#0D9488] hover:bg-[#0F766E] text-white rounded-sm text-xs font-medium transition shadow-2xs"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Upload Invoice</span>
+            </button>
+
+            {/* Persona Switcher Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                className="flex items-center space-x-2 px-2 py-1 bg-[#181D28] hover:bg-[#1E2534] border border-[#232936] rounded-sm text-left transition"
+              >
+                <div className="w-5 h-5 rounded-xs bg-[#242C3D] text-[#2DD4BF] font-mono text-[10px] font-bold flex items-center justify-center">
+                  {currentUser.initials}
+                </div>
+                <div className="hidden sm:block">
+                  <div className="text-xs font-medium text-[#E5E9F0] leading-none">{currentUser.name}</div>
+                  <div className="text-[10px] text-[#7E8799] leading-none mt-0.5">{currentUser.role}</div>
+                </div>
+                <ChevronDown className="w-3 h-3 text-[#7E8799]" />
+              </button>
+
+              {userDropdownOpen && (
+                <div className="absolute right-0 mt-1.5 w-68 bg-[#181D28] rounded-sm shadow-xl border border-[#282F3E] py-1.5 z-50 text-[#E5E9F0]">
+                  <div className="px-3 py-1.5 border-b border-[#232936]">
+                    <div className="text-[11px] text-[#7E8799]">Current User</div>
+                    <div className="font-semibold text-xs text-white">{currentUser.name}</div>
+                    <div className="text-[10px] text-[#8C96A8] font-mono">{currentUser.department} • Signing Limit: {currentUser.approvalLimit}</div>
+                  </div>
+
+                  <div className="px-1.5 py-1">
+                    <div className="text-[10px] text-[#7E8799] px-2 py-1 font-mono">Switch Role</div>
+                    {ROLES.map((r) => (
+                      <button
+                        key={r.id}
+                        onClick={() => {
+                          setCurrentUser(r);
+                          setUserDropdownOpen(false);
+                        }}
+                        className={`w-full flex items-center space-x-2 px-2 py-1.5 rounded-xs text-left text-xs transition ${
+                          currentUser.id === r.id ? 'bg-[#1E2534] text-white font-medium border border-[#2E374A]' : 'text-[#8C96A8] hover:bg-[#151922] hover:text-[#E5E9F0]'
+                        }`}
+                      >
+                        <div className="w-5 h-5 rounded-xs bg-[#242C3D] text-[#8C96A8] font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                          {r.initials}
+                        </div>
+                        <div className="truncate">
+                          <div className="truncate text-xs leading-none text-[#E5E9F0]">{r.name}</div>
+                          <div className="text-[10px] text-[#7E8799] leading-none mt-0.5 font-mono">{r.role}</div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-        </nav>
-      </header>
-    </>
+        </div>
+      </div>
+
+      {/* Mobile Sub Navigation (Horizontal scrolling for smaller screens) */}
+      <div className="md:hidden flex items-center space-x-1 px-4 py-1.5 overflow-x-auto border-t border-[#232936] bg-[#0E1117]">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeTab === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-xs text-xs whitespace-nowrap ${
+                isActive ? 'bg-[#1E2534] text-white border border-[#2E374A]' : 'text-[#8C96A8]'
+              }`}
+            >
+              <Icon className="w-3.5 h-3.5" />
+              <span>{item.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </header>
   );
 };

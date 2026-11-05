@@ -86,32 +86,35 @@ export const MatchingPage = ({ selectedInvoiceId, setSelectedInvoiceId, setActiv
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#232936] pb-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">PO & GRN Reconciliation Center</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            2-Way and 3-Way matching reconciling Billed Invoices against Purchase Orders and Goods Receipt Notes.
+          <div className="flex items-center space-x-2">
+            <span className="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+            <h1 className="text-lg font-semibold text-[#E5E9F0] tracking-tight">PO & GRN Reconciliation Center</h1>
+          </div>
+          <p className="text-xs text-[#7E8799] mt-0.5">
+            2-way and 3-way matching reconciling billed invoices against purchase orders and goods receipt notes
           </p>
         </div>
 
         {/* Controls */}
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2">
           <select
             value={selectedInvoiceId || ''}
             onChange={(e) => setSelectedInvoiceId(Number(e.target.value))}
-            className="bg-white border border-slate-300 text-xs text-slate-800 rounded-lg px-3 py-1.5 outline-none font-medium shadow-2xs cursor-pointer"
+            className="bg-[#121620] border border-[#232936] text-xs text-[#E5E9F0] rounded-sm px-3 py-1.5 outline-none font-mono cursor-pointer"
           >
             {invoices.map((inv) => (
-              <option key={inv.id} value={inv.id}>
+              <option key={inv.id} value={inv.id} className="bg-[#181D28] text-[#E5E9F0]">
                 #{inv.invoice_number} ({inv.match_status}) - PO: {inv.po_number_raw || 'None'}
               </option>
             ))}
           </select>
 
           {/* Tolerance input */}
-          <div className="flex items-center space-x-1 bg-white border border-slate-300 rounded-lg px-2.5 py-1 text-xs shadow-2xs">
-            <Sliders className="w-3.5 h-3.5 text-slate-400" />
-            <span className="text-slate-500 font-medium">Tolerance:</span>
+          <div className="flex items-center space-x-1.5 bg-[#121620] border border-[#232936] rounded-sm px-2.5 py-1 text-xs">
+            <Sliders className="w-3.5 h-3.5 text-[#7E8799]" />
+            <span className="text-[#8C96A8]">Tolerance:</span>
             <input
               type="number"
               step="0.5"
@@ -119,25 +122,25 @@ export const MatchingPage = ({ selectedInvoiceId, setSelectedInvoiceId, setActiv
               max="10"
               value={tolerance}
               onChange={(e) => setTolerance(e.target.value)}
-              className="w-10 text-right font-bold font-mono text-slate-900 outline-none"
+              className="w-10 text-right font-mono text-[#E5E9F0] bg-transparent outline-none"
             />
-            <span className="font-bold text-slate-600">%</span>
+            <span className="text-[#7E8799] font-mono">%</span>
           </div>
 
           <div className="flex items-center space-x-1.5">
             <button
               onClick={() => executeMatch('2-Way')}
               disabled={matching}
-              className="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-medium text-xs rounded-lg shadow-2xs transition disabled:opacity-50"
+              className="px-2.5 py-1.5 bg-[#181D28] hover:bg-[#1E2534] border border-[#282F3E] text-[#E5E9F0] text-xs font-medium rounded-sm transition disabled:opacity-50"
             >
-              2-Way Match
+              2-Way match
             </button>
             <button
               onClick={() => executeMatch('3-Way')}
               disabled={matching}
-              className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs rounded-lg shadow-xs transition disabled:opacity-50"
+              className="px-3 py-1.5 bg-[#0D9488] hover:bg-[#0F766E] text-white text-xs font-medium rounded-sm shadow-2xs transition disabled:opacity-50"
             >
-              Run 3-Way Match
+              Run 3-way match
             </button>
           </div>
         </div>
@@ -145,40 +148,40 @@ export const MatchingPage = ({ selectedInvoiceId, setSelectedInvoiceId, setActiv
 
       {loading ? (
         <div className="flex items-center justify-center p-12">
-          <RefreshCw className="w-7 h-7 text-sky-600 animate-spin" />
+          <RefreshCw className="w-6 h-6 text-[#0D9488] animate-spin" />
         </div>
       ) : invoice ? (
-        <div className="space-y-5">
+        <div className="space-y-4">
           {/* Match Outcome Banner */}
           {matchResult ? (
-            <div className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ${
+            <div className={`p-4 rounded-sm border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ${
               matchResult.within_tolerance && matchResult.status === 'Matched'
-                ? 'bg-emerald-50/70 border-emerald-200 text-emerald-950'
-                : 'bg-amber-50/70 border-amber-300 text-amber-950'
+                ? 'bg-[#0D9488]/10 border-[#0D9488]/30 text-[#E5E9F0]'
+                : 'bg-[#F59E0B]/10 border-[#F59E0B]/30 text-[#E5E9F0]'
             }`}>
               <div className="flex items-center space-x-3">
                 {matchResult.within_tolerance && matchResult.status === 'Matched' ? (
-                  <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0" />
+                  <CheckCircle2 className="w-5 h-5 text-[#2DD4BF] shrink-0" />
                 ) : (
-                  <AlertTriangle className="w-6 h-6 text-amber-600 shrink-0" />
+                  <AlertTriangle className="w-5 h-5 text-[#F59E0B] shrink-0" />
                 )}
                 <div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider bg-white/80 px-2 py-0.2 rounded border border-current">
-                      {matchResult.match_type} Reconciliation
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-xs border border-current">
+                      {matchResult.match_type} reconciliation
                     </span>
-                    <span className="text-xs font-mono font-bold">
+                    <span className="text-xs font-mono text-[#C4CBD8]">
                       PO #{matchResult.details_json?.po_number || invoice.po_number_raw || 'N/A'}
                     </span>
                     {matchResult.details_json?.grn_number && (
-                      <span className="text-xs font-mono bg-white px-2 py-0.2 rounded border">
+                      <span className="text-xs font-mono text-[#7E8799] bg-[#181D28] px-2 py-0.5 rounded-xs border border-[#232936]">
                         GRN #{matchResult.details_json.grn_number}
                       </span>
                     )}
                   </div>
-                  <h2 className="text-sm font-bold mt-1">Status: {matchResult.status}</h2>
-                  <p className="text-xs opacity-85">
-                    Net variance against PO: <strong>₹{(matchResult.variance_amount || 0).toLocaleString('en-IN')}</strong> (Allowed tolerance: ±{matchResult.tolerance_applied}%)
+                  <h2 className="text-sm font-semibold mt-1">Status: {matchResult.status}</h2>
+                  <p className="text-xs text-[#8C96A8] mt-0.5">
+                    Net variance against PO: <strong className="font-mono text-[#E5E9F0]">₹{(matchResult.variance_amount || 0).toLocaleString('en-IN')}</strong> (Allowed tolerance: ±{matchResult.tolerance_applied}%)
                   </p>
                 </div>
               </div>
@@ -186,76 +189,76 @@ export const MatchingPage = ({ selectedInvoiceId, setSelectedInvoiceId, setActiv
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => setActiveTab('approvals')}
-                  className="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs rounded-lg shadow-xs transition flex items-center gap-1"
+                  className="px-3 py-1.5 bg-[#181D28] hover:bg-[#1E2534] text-[#E5E9F0] border border-[#282F3E] font-medium text-xs rounded-sm transition flex items-center gap-1"
                 >
-                  <span>Go to Approvals</span>
+                  <span>Go to approvals</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
           ) : (
-            <div className="p-8 text-center bg-white rounded-xl border border-slate-200 text-slate-400 text-xs">
-              No matching run executed yet for this invoice. Click "Run 3-Way Match" above.
+            <div className="p-8 text-center bg-[#121620] rounded-sm border border-[#232936] text-[#7E8799] text-xs font-mono">
+              No matching run executed yet for this invoice. Click "Run 3-way match" above.
             </div>
           )}
 
           {/* Line-by-Line 3-Way Match Reconciliation Table */}
           {lineComparisons.length > 0 && (
-            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-3">
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Line Item Reconciliation Breakdown</h3>
-                <p className="text-xs text-slate-500">
-                  Itemized comparison across Billed Invoice, Approved Purchase Order, and Accepted Goods Receipt (GRN)
+            <div className="bg-[#121620] p-4 rounded-sm border border-[#232936] space-y-3">
+              <div className="border-b border-[#1E2534] pb-2.5">
+                <h3 className="text-xs font-semibold text-[#E5E9F0]">Line item reconciliation breakdown</h3>
+                <p className="text-[11px] text-[#7E8799]">
+                  Itemized comparison across billed invoice, purchase order, and accepted goods receipt note (GRN)
                 </p>
               </div>
 
-              <div className="overflow-x-auto border border-slate-200 rounded-lg">
+              <div className="overflow-x-auto border border-[#232936] rounded-sm">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr className="bg-slate-50 text-[10px] font-semibold text-slate-500 uppercase border-b border-slate-200">
-                      <th className="py-2.5 px-3">#</th>
-                      <th className="py-2.5 px-3">Item Description</th>
-                      <th className="py-2.5 px-3 text-center">Inv Qty</th>
-                      <th className="py-2.5 px-3 text-center">PO Qty</th>
-                      {matchResult.match_type === '3-Way' && (
-                        <th className="py-2.5 px-3 text-center">GRN Qty</th>
+                    <tr className="bg-[#181D28] text-[10px] text-[#8C96A8] border-b border-[#232936]">
+                      <th className="py-2.5 px-3 font-medium">#</th>
+                      <th className="py-2.5 px-3 font-medium">Item description</th>
+                      <th className="py-2.5 px-3 text-center font-medium">Inv qty</th>
+                      <th className="py-2.5 px-3 text-center font-medium">PO qty</th>
+                      {matchResult?.match_type === '3-Way' && (
+                        <th className="py-2.5 px-3 text-center font-medium">GRN qty</th>
                       )}
-                      <th className="py-2.5 px-3 text-right">Inv Rate</th>
-                      <th className="py-2.5 px-3 text-right">PO Rate</th>
-                      <th className="py-2.5 px-3 text-center">Price Diff%</th>
-                      <th className="py-2.5 px-3 text-center">Reconciliation</th>
+                      <th className="py-2.5 px-3 text-right font-medium">Inv rate</th>
+                      <th className="py-2.5 px-3 text-right font-medium">PO rate</th>
+                      <th className="py-2.5 px-3 text-center font-medium">Price diff%</th>
+                      <th className="py-2.5 px-3 text-center font-medium">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 font-mono text-[11px]">
+                  <tbody className="divide-y divide-[#1E2534] font-mono text-[11px]">
                     {lineComparisons.map((line, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50/50">
-                        <td className="py-2.5 px-3 text-slate-400">{line.line_number}</td>
-                        <td className="py-2.5 px-3 font-sans font-medium text-slate-900">{line.item_description}</td>
-                        <td className="py-2.5 px-3 text-center font-bold text-slate-800">{line.invoice_qty}</td>
-                        <td className="py-2.5 px-3 text-center text-slate-700">{line.po_qty}</td>
-                        {matchResult.match_type === '3-Way' && (
-                          <td className="py-2.5 px-3 text-center text-slate-700">
+                      <tr key={idx} className="hover:bg-[#181D28]/60 transition">
+                        <td className="py-2.5 px-3 text-[#64718A]">{line.line_number}</td>
+                        <td className="py-2.5 px-3 font-sans font-medium text-[#C4CBD8]">{line.item_description}</td>
+                        <td className="py-2.5 px-3 text-center text-[#2DD4BF]">{line.invoice_qty}</td>
+                        <td className="py-2.5 px-3 text-center text-[#C4CBD8]">{line.po_qty}</td>
+                        {matchResult?.match_type === '3-Way' && (
+                          <td className="py-2.5 px-3 text-center text-[#8C96A8]">
                             {line.grn_qty !== null ? line.grn_qty : '—'}
                           </td>
                         )}
-                        <td className="py-2.5 px-3 text-right font-medium text-slate-900">₹{line.invoice_unit_price.toLocaleString('en-IN')}</td>
-                        <td className="py-2.5 px-3 text-right text-slate-600">₹{line.po_unit_price.toLocaleString('en-IN')}</td>
+                        <td className="py-2.5 px-3 text-right text-[#E5E9F0]">₹{line.invoice_unit_price.toLocaleString('en-IN')}</td>
+                        <td className="py-2.5 px-3 text-right text-[#8C96A8]">₹{line.po_unit_price.toLocaleString('en-IN')}</td>
                         <td className="py-2.5 px-3 text-center font-mono">
-                          <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
+                          <span className={`px-1.5 py-0.2 rounded-xs text-[10px] font-mono ${
                             line.price_diff_percent > tolerance
-                              ? 'bg-red-50 text-red-700 border border-red-200'
-                              : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              ? 'bg-[#EF4444]/15 text-[#F87171] border border-[#EF4444]/30'
+                              : 'bg-[#0D9488]/15 text-[#2DD4BF] border border-[#0D9488]/30'
                           }`}>
                             {line.price_diff_percent > 0 ? `+${line.price_diff_percent}%` : `${line.price_diff_percent}%`}
                           </span>
                         </td>
                         <td className="py-2.5 px-3 text-center">
                           {line.price_within_tolerance && line.quantity_valid ? (
-                            <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 font-sans">
+                            <span className="text-[10px] font-mono text-[#2DD4BF] bg-[#0D9488]/15 px-2 py-0.5 rounded-xs border border-[#0D9488]/30">
                               Matched
                             </span>
                           ) : (
-                            <span className="text-[10px] font-semibold text-red-700 bg-red-50 px-2 py-0.5 rounded-full border border-red-200 font-sans">
+                            <span className="text-[10px] font-mono text-[#F87171] bg-[#EF4444]/15 px-2 py-0.5 rounded-xs border border-[#EF4444]/30">
                               Variance
                             </span>
                           )}

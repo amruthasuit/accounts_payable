@@ -16,10 +16,10 @@ export function AppContent() {
   const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#0E1117] text-[#E5E9F0] flex flex-col font-sans">
       <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
       
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-6 py-6">
         {activeTab === 'dashboard' && (
           <DashboardPage 
             setActiveTab={setActiveTab} 
@@ -66,13 +66,19 @@ export function AppContent() {
         )}
       </main>
 
-      <footer className="bg-white border-t border-slate-200 py-3 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-1 text-[11px]">
-          <div>
-            <strong>Templegate Technologies</strong> • Accounts Payable Operations Suite
+      <footer className="bg-[#121620] border-t border-[#232936] py-3.5 text-xs text-[#7E8799]">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px]">
+          <div className="flex items-center space-x-2">
+            <span className="font-semibold text-[#C4CBD8]">Templegate AP Ledger</span>
+            <span className="text-[#3A4459]">/</span>
+            <span>Enterprise Payable Processing Engine</span>
           </div>
-          <div className="text-slate-400 font-mono">
-            Direct Bank Settlement • ISO 20022 / NEFT / RTGS • ERP Connectors (Tally, SAP)
+          <div className="text-[#64718A] font-mono flex items-center space-x-3">
+            <span>Direct Bank Settlement</span>
+            <span className="text-[#3A4459]">/</span>
+            <span>ISO 20022 & NEFT</span>
+            <span className="text-[#3A4459]">/</span>
+            <span>ERP Connectors</span>
           </div>
         </div>
       </footer>

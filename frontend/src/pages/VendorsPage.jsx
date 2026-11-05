@@ -116,93 +116,97 @@ export const VendorsPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#232936] pb-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Vendor Master Directory</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Registered supplier master records, verified bank accounts, and statutory tax compliance status.
+          <div className="flex items-center space-x-2">
+            <span className="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+            <h1 className="text-lg font-semibold text-[#E5E9F0] tracking-tight">Vendor Master Directory</h1>
+          </div>
+          <p className="text-xs text-[#7E8799] mt-0.5">
+            Registered supplier master records, verified bank accounts, and statutory tax compliance status
           </p>
         </div>
 
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center space-x-1.5 px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold shadow-xs transition self-start sm:self-auto"
+          className="flex items-center space-x-1.5 px-3 py-1.5 bg-[#0D9488] hover:bg-[#0F766E] text-white rounded-sm text-xs font-medium shadow-2xs transition self-start sm:self-auto"
         >
           <Plus className="w-3.5 h-3.5" />
-          <span>Add Vendor</span>
+          <span>Add vendor</span>
         </button>
       </div>
 
       {/* Search Input */}
       <div className="relative">
-        <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+        <Search className="w-3.5 h-3.5 text-[#64718A] absolute left-3 top-1/2 -translate-y-1/2" />
         <input
           type="text"
           placeholder="Filter vendors by company name, supplier code, or GSTIN..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full bg-white border border-slate-300 rounded-xl pl-8 pr-4 py-2 text-xs text-slate-900 outline-none focus:border-sky-500 shadow-2xs font-medium"
+          className="w-full bg-[#121620] border border-[#232936] rounded-sm pl-8 pr-4 py-2 text-xs text-[#E5E9F0] placeholder-[#64718A] outline-none focus:border-[#0D9488]"
         />
       </div>
 
       {/* Vendor Cards Grid */}
       {loading ? (
         <div className="flex items-center justify-center p-12">
-          <RefreshCw className="w-7 h-7 text-sky-600 animate-spin" />
+          <RefreshCw className="w-6 h-6 text-[#0D9488] animate-spin" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {filteredVendors.map((vendor) => (
-            <div key={vendor.id} className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs hover:border-slate-300 transition space-y-3.5 flex flex-col justify-between">
+            <div key={vendor.id} className="bg-[#121620] p-4 rounded-sm border border-[#232936] hover:border-[#282F3E] transition space-y-3 flex flex-col justify-between">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                  <span className="text-[11px] font-mono text-[#2DD4BF] bg-[#0D9488]/15 px-2 py-0.5 rounded-xs border border-[#0D9488]/30">
                     {vendor.code}
                   </span>
-                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded-xs border ${
                     vendor.status === 'Active' 
-                      ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
-                      : 'bg-amber-50 text-amber-800 border border-amber-200'
+                      ? 'bg-[#0D9488]/15 text-[#2DD4BF] border-[#0D9488]/30' 
+                      : 'bg-[#F59E0B]/15 text-[#FBBF24] border-[#F59E0B]/30'
                   }`}>
                     {vendor.status}
                   </span>
                 </div>
 
-                <h2 className="text-sm font-bold text-slate-900 leading-snug">{vendor.name}</h2>
-                <div className="text-[11px] text-slate-500 flex items-center space-x-1.5 font-mono">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>GSTIN: {vendor.tax_id || 'Not Registered'}</span>
+                <h2 className="text-sm font-semibold text-[#E5E9F0] leading-snug">{vendor.name}</h2>
+                <div className="text-[11px] text-[#7E8799] flex items-center space-x-1.5 font-mono">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#2DD4BF] shrink-0" />
+                  <span>GSTIN: {vendor.tax_id || 'Not registered'}</span>
                 </div>
-                <div className="text-xs text-slate-600">
-                  <span>Category: <strong className="text-slate-800">{vendor.category}</strong></span> • 
-                  <span className="ml-1">Terms: <strong className="text-slate-800">{vendor.payment_terms}</strong></span>
+                <div className="text-xs text-[#8C96A8] flex items-center space-x-2">
+                  <span>Category: <strong className="text-[#C4CBD8]">{vendor.category}</strong></span>
+                  <span>/</span>
+                  <span>Terms: <strong className="font-mono text-[#C4CBD8]">{vendor.payment_terms}</strong></span>
                 </div>
               </div>
 
               {/* Verified Bank Details */}
-              <div className="bg-slate-50/70 p-3 rounded-lg border border-slate-200/80 text-xs space-y-1">
-                <div className="flex items-center justify-between text-slate-500 font-semibold text-[10px] uppercase">
-                  <span>Disbursement Account</span>
-                  <span className="text-emerald-700 font-medium">✓ Verified</span>
+              <div className="bg-[#181D28] p-3 rounded-sm border border-[#282F3E] text-xs space-y-1">
+                <div className="flex items-center justify-between text-[#7E8799] text-[10px] font-mono">
+                  <span>Settlement account</span>
+                  <span className="text-[#2DD4BF]">Verified</span>
                 </div>
                 {vendor.bank_accounts && vendor.bank_accounts.length > 0 ? (
                   <>
-                    <div className="font-semibold text-slate-800">{vendor.bank_accounts[0].bank_name}</div>
-                    <div className="text-[11px] text-slate-600 font-mono">
+                    <div className="font-medium text-[#E5E9F0]">{vendor.bank_accounts[0].bank_name}</div>
+                    <div className="text-[11px] text-[#C4CBD8] font-mono">
                       A/C: {vendor.bank_accounts[0].account_number}
                     </div>
-                    <div className="text-[10px] text-slate-500 font-mono">
+                    <div className="text-[10px] text-[#7E8799] font-mono">
                       IFSC: {vendor.bank_accounts[0].ifsc_code}
                     </div>
                   </>
                 ) : (
-                  <div className="text-amber-700 text-[11px]">No verified bank account configured.</div>
+                  <div className="text-[#FBBF24] text-[11px] font-mono">No settlement account configured</div>
                 )}
               </div>
 
-              <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-                <span>Jurisdiction: {vendor.state} ({vendor.state_code})</span>
-                <span className="text-slate-600 font-medium">{vendor.email || 'billing@vendor.com'}</span>
+              <div className="pt-2 border-t border-[#1E2534] flex items-center justify-between text-[11px] text-[#64718A]">
+                <span className="font-mono">{vendor.state} ({vendor.state_code})</span>
+                <span className="text-[#8C96A8] font-mono">{vendor.email || 'billing@vendor.com'}</span>
               </div>
             </div>
           ))}
@@ -211,36 +215,36 @@ export const VendorsPage = () => {
 
       {/* Onboarding Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-2xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto border border-slate-200">
-            <div className="flex items-center justify-between border-b pb-3">
-              <h2 className="text-sm font-bold text-slate-900">Register New Supplier Entity</h2>
-              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600">
+        <div className="fixed inset-0 bg-[#0E1117]/80 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-[#121620] rounded-sm max-w-lg w-full p-5 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto border border-[#282F3E]">
+            <div className="flex items-center justify-between border-b border-[#232936] pb-3">
+              <h2 className="text-xs font-semibold text-[#E5E9F0]">Register new supplier entity</h2>
+              <button onClick={() => setShowAddModal(false)} className="text-[#7E8799] hover:text-[#E5E9F0]">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateVendor} className="space-y-3.5 text-xs">
+            <form onSubmit={handleCreateVendor} className="space-y-3 text-xs">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700">Company Legal Name *</label>
+                  <label className="text-[11px] text-[#8C96A8]">Company legal name *</label>
                   <input
                     required
                     type="text"
                     value={newVendor.name}
                     onChange={(e) => setNewVendor({ ...newVendor, name: e.target.value })}
-                    className="w-full mt-1 border border-slate-300 rounded-lg px-3 py-1.5 outline-none focus:border-slate-800"
+                    className="w-full mt-1 bg-[#181D28] border border-[#282F3E] rounded-sm px-3 py-1.5 text-xs text-[#E5E9F0] outline-none focus:border-[#0D9488]"
                     placeholder="e.g. Acme Tech Solutions Ltd"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700">Vendor Code *</label>
+                  <label className="text-[11px] text-[#8C96A8]">Vendor code *</label>
                   <input
                     required
                     type="text"
                     value={newVendor.code}
                     onChange={(e) => setNewVendor({ ...newVendor, code: e.target.value })}
-                    className="w-full mt-1 border border-slate-300 rounded-lg px-3 py-1.5 outline-none focus:border-slate-800 font-mono"
+                    className="w-full mt-1 bg-[#181D28] border border-[#282F3E] rounded-sm px-3 py-1.5 text-xs text-[#E5E9F0] outline-none focus:border-[#0D9488] font-mono"
                     placeholder="VEND-ACME-01"
                   />
                 </div>
@@ -248,14 +252,14 @@ export const VendorsPage = () => {
 
               {/* GSTIN with live verify */}
               <div>
-                <label className="font-semibold text-slate-700 flex justify-between">
-                  <span>Vendor GSTIN (15 Characters)</span>
+                <label className="text-[11px] text-[#8C96A8] flex justify-between">
+                  <span>Vendor GSTIN (15 characters)</span>
                   <button
                     type="button"
                     onClick={() => handleValidateGst(newVendor.tax_id)}
-                    className="text-sky-700 hover:text-sky-800 font-semibold"
+                    className="text-[#2DD4BF] hover:underline font-mono"
                   >
-                    Check GSTN Status
+                    Verify GSTN
                   </button>
                 </label>
                 <input
@@ -265,99 +269,99 @@ export const VendorsPage = () => {
                     const val = e.target.value.toUpperCase();
                     setNewVendor({ ...newVendor, tax_id: val, state_code: val.substring(0, 2) });
                   }}
-                  className="w-full mt-1 border border-slate-300 rounded-lg px-3 py-1.5 outline-none focus:border-slate-800 font-mono uppercase"
+                  className="w-full mt-1 bg-[#181D28] border border-[#282F3E] rounded-sm px-3 py-1.5 text-xs text-[#E5E9F0] outline-none focus:border-[#0D9488] font-mono uppercase"
                   placeholder="29AABCA1234F1Z5"
                 />
               </div>
 
               {gstValidationResult && (
-                <div className={`p-2.5 rounded-lg border text-[11px] ${
-                  gstValidationResult.is_valid ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-red-50 border-red-200 text-red-800'
+                <div className={`p-2.5 rounded-sm border text-[11px] font-mono ${
+                  gstValidationResult.is_valid ? 'bg-[#0D9488]/15 border-[#0D9488]/30 text-[#2DD4BF]' : 'bg-[#EF4444]/15 border-[#EF4444]/30 text-[#F87171]'
                 }`}>
-                  <strong>GSTN Lookup:</strong> {gstValidationResult.taxpayer_status} • State: {gstValidationResult.state_name} ({gstValidationResult.state_code})
+                  <strong>GSTN Lookup:</strong> {gstValidationResult.taxpayer_status} / State: {gstValidationResult.state_name} ({gstValidationResult.state_code})
                 </div>
               )}
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700">Category</label>
+                  <label className="text-[11px] text-[#8C96A8]">Category</label>
                   <select
                     value={newVendor.category}
                     onChange={(e) => setNewVendor({ ...newVendor, category: e.target.value })}
-                    className="w-full mt-1 border border-slate-300 rounded-lg px-3 py-1.5 outline-none"
+                    className="w-full mt-1 bg-[#181D28] border border-[#282F3E] rounded-sm px-3 py-1.5 text-xs text-[#E5E9F0] outline-none"
                   >
-                    <option value="Software">Software</option>
-                    <option value="Hardware">Hardware</option>
-                    <option value="Supplies">Office Supplies</option>
-                    <option value="Logistics">Logistics & Freight</option>
-                    <option value="Services">Consulting / Services</option>
+                    <option value="Software" className="bg-[#181D28]">Software</option>
+                    <option value="Hardware" className="bg-[#181D28]">Hardware</option>
+                    <option value="Supplies" className="bg-[#181D28]">Office supplies</option>
+                    <option value="Logistics" className="bg-[#181D28]">Logistics & freight</option>
+                    <option value="Services" className="bg-[#181D28]">Consulting / services</option>
                   </select>
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700">Settlement Terms</label>
+                  <label className="text-[11px] text-[#8C96A8]">Settlement terms</label>
                   <select
                     value={newVendor.payment_terms}
                     onChange={(e) => setNewVendor({ ...newVendor, payment_terms: e.target.value })}
-                    className="w-full mt-1 border border-slate-300 rounded-lg px-3 py-1.5 outline-none"
+                    className="w-full mt-1 bg-[#181D28] border border-[#282F3E] rounded-sm px-3 py-1.5 text-xs text-[#E5E9F0] outline-none"
                   >
-                    <option value="Immediate">Immediate</option>
-                    <option value="Net 15">Net 15</option>
-                    <option value="Net 30">Net 30</option>
-                    <option value="Net 60">Net 60</option>
+                    <option value="Immediate" className="bg-[#181D28]">Immediate</option>
+                    <option value="Net 15" className="bg-[#181D28]">Net 15</option>
+                    <option value="Net 30" className="bg-[#181D28]">Net 30</option>
+                    <option value="Net 60" className="bg-[#181D28]">Net 60</option>
                   </select>
                 </div>
               </div>
 
               {/* Bank Details */}
-              <div className="pt-2 border-t border-slate-200 space-y-2">
-                <span className="font-bold text-slate-800 block text-[11px]">Primary Bank Settlement Account</span>
+              <div className="pt-2 border-t border-[#232936] space-y-2">
+                <span className="text-[11px] font-medium text-[#C4CBD8] block">Primary bank settlement account</span>
                 <div className="grid grid-cols-3 gap-2">
                   <div>
-                    <label className="text-[10px] text-slate-500 font-semibold">Bank Name</label>
+                    <label className="text-[10px] text-[#7E8799]">Bank name</label>
                     <input
                       type="text"
                       placeholder="HDFC Bank"
                       value={newVendor.bank_name}
                       onChange={(e) => setNewVendor({ ...newVendor, bank_name: e.target.value })}
-                      className="w-full border border-slate-300 rounded px-2 py-1"
+                      className="w-full mt-1 bg-[#181D28] border border-[#282F3E] rounded-sm px-2 py-1 text-xs text-[#E5E9F0]"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] text-slate-500 font-semibold">Account No</label>
+                    <label className="text-[10px] text-[#7E8799]">Account no</label>
                     <input
                       type="text"
                       placeholder="502000123456"
                       value={newVendor.account_number}
                       onChange={(e) => setNewVendor({ ...newVendor, account_number: e.target.value })}
-                      className="w-full border border-slate-300 rounded px-2 py-1 font-mono"
+                      className="w-full mt-1 bg-[#181D28] border border-[#282F3E] rounded-sm px-2 py-1 text-xs font-mono text-[#E5E9F0]"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] text-slate-500 font-semibold">IFSC Code</label>
+                    <label className="text-[10px] text-[#7E8799]">IFSC code</label>
                     <input
                       type="text"
                       placeholder="HDFC0000053"
                       value={newVendor.ifsc_code}
                       onChange={(e) => setNewVendor({ ...newVendor, ifsc_code: e.target.value.toUpperCase() })}
-                      className="w-full border border-slate-300 rounded px-2 py-1 font-mono uppercase"
+                      className="w-full mt-1 bg-[#181D28] border border-[#282F3E] rounded-sm px-2 py-1 text-xs font-mono uppercase text-[#E5E9F0]"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="pt-3 border-t flex justify-end space-x-2">
+              <div className="pt-3 border-t border-[#232936] flex justify-end space-x-2">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-3.5 py-1.5 border border-slate-300 rounded-lg text-slate-700 font-medium"
+                  className="px-3 py-1.5 border border-[#282F3E] rounded-sm text-[#C4CBD8] hover:bg-[#181D28] text-xs font-medium"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg shadow-xs"
+                  className="px-3.5 py-1.5 bg-[#0D9488] hover:bg-[#0F766E] text-white font-medium rounded-sm text-xs shadow-2xs"
                 >
-                  Save Supplier
+                  Save supplier
                 </button>
               </div>
             </form>

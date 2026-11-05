@@ -187,7 +187,7 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
     try {
       const res = await api.put(`/invoices/${invoice.id}`, formData);
       setInvoice(res.data);
-      setStatusMessage('Invoice updated & compliance rules re-evaluated successfully.');
+      setStatusMessage('Invoice updated and compliance rules re-evaluated.');
       fetchInvoicesList();
       setTimeout(() => setStatusMessage(''), 4000);
     } catch (err) {
@@ -249,10 +249,10 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
     if (!matchesSearch) return false;
 
     if (activeFilterTab === 'All') return true;
-    if (activeFilterTab === 'Needs Review') return inv.status === 'Extracted' || inv.status === 'Captured';
+    if (activeFilterTab === 'Needs review') return inv.status === 'Extracted' || inv.status === 'Captured';
     if (activeFilterTab === 'Exceptions') return inv.status === 'Validation Failed' || inv.status === 'Match Exception';
     if (activeFilterTab === 'Approvals') return inv.status === 'Pending Approval' || inv.status === 'Escalated';
-    if (activeFilterTab === 'Ready to Pay') return inv.status === 'Approved';
+    if (activeFilterTab === 'Ready to pay') return inv.status === 'Approved';
     if (activeFilterTab === 'Paid') return inv.status === 'Paid';
     return true;
   });
@@ -264,33 +264,36 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
     return (
       <div className="space-y-5">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#232936] pb-4">
           <div>
-            <h1 className="text-xl font-bold text-slate-900 tracking-tight">Invoice Management Directory</h1>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Review OCR extractions, resolve matching exceptions, and monitor approval progress.
+            <div className="flex items-center space-x-2">
+              <span className="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+              <h1 className="text-lg font-semibold text-[#E5E9F0] tracking-tight">Invoice Ledger Directory</h1>
+            </div>
+            <p className="text-xs text-[#7E8799] mt-0.5">
+              Review OCR extractions, inspect line parity, and resolve reconciliation variances
             </p>
           </div>
 
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setActiveTab('capture')}
-              className="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold shadow-xs transition"
+              className="px-3 py-1.5 bg-[#0D9488] hover:bg-[#0F766E] text-white rounded-sm text-xs font-medium transition shadow-2xs"
             >
-              + Ingest Invoice
+              + Ingest invoice
             </button>
           </div>
         </div>
 
         {/* Filter Tabs & Search */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex space-x-1 overflow-x-auto bg-slate-200/70 p-1 rounded-xl text-xs font-medium">
-            {['All', 'Needs Review', 'Exceptions', 'Approvals', 'Ready to Pay', 'Paid'].map((tab) => (
+          <div className="flex space-x-1 overflow-x-auto bg-[#121620] p-1 rounded-sm border border-[#232936] text-xs">
+            {['All', 'Needs review', 'Exceptions', 'Approvals', 'Ready to pay', 'Paid'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveFilterTab(tab)}
-                className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition ${
-                  activeFilterTab === tab ? 'bg-white text-slate-900 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                className={`px-3 py-1 rounded-xs whitespace-nowrap transition text-xs font-medium ${
+                  activeFilterTab === tab ? 'bg-[#1E2534] text-white border border-[#2E374A]' : 'text-[#8C96A8] hover:text-[#E5E9F0]'
                 }`}
               >
                 {tab}
@@ -299,104 +302,104 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
           </div>
 
           <div className="relative w-full sm:w-64">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-[#64718A] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Filter by invoice, vendor, PO..."
+              placeholder="Search invoice, vendor, PO..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-slate-300 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-900 outline-none focus:border-sky-500"
+              className="w-full bg-[#121620] border border-[#232936] rounded-sm pl-8 pr-3 py-1.5 text-xs text-[#E5E9F0] placeholder-[#64718A] outline-none focus:border-[#0D9488]"
             />
           </div>
         </div>
 
         {/* Invoices Data Grid */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+        <div className="bg-[#121620] rounded-sm border border-[#232936] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-slate-200 text-[11px] font-semibold text-slate-500 uppercase tracking-wider bg-slate-50/80">
-                  <th className="py-3 px-4">Invoice #</th>
-                  <th className="py-3 px-4">Vendor</th>
-                  <th className="py-3 px-4 font-mono">PO Ref</th>
-                  <th className="py-3 px-4">Invoice Date</th>
-                  <th className="py-3 px-4 text-right">Gross Total</th>
-                  <th className="py-3 px-4 text-center">OCR Score</th>
-                  <th className="py-3 px-4 text-center">Validation</th>
-                  <th className="py-3 px-4 text-center">Match Status</th>
-                  <th className="py-3 px-4 text-center">Lifecycle Status</th>
-                  <th className="py-3 px-4 text-center">Action</th>
+                <tr className="border-b border-[#232936] text-[11px] text-[#8C96A8] bg-[#181D28]">
+                  <th className="py-2.5 px-3.5 font-medium">Invoice #</th>
+                  <th className="py-2.5 px-3.5 font-medium">Vendor</th>
+                  <th className="py-2.5 px-3.5 font-mono font-medium">PO ref</th>
+                  <th className="py-2.5 px-3.5 font-medium">Date</th>
+                  <th className="py-2.5 px-3.5 text-right font-medium">Gross total</th>
+                  <th className="py-2.5 px-3.5 text-center font-medium">OCR score</th>
+                  <th className="py-2.5 px-3.5 text-center font-medium">Validation</th>
+                  <th className="py-2.5 px-3.5 text-center font-medium">Match status</th>
+                  <th className="py-2.5 px-3.5 text-center font-medium">Lifecycle</th>
+                  <th className="py-2.5 px-3.5 text-center font-medium">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#1E2534]">
                 {filteredInvoices.map((inv) => (
-                  <tr key={inv.id} className="hover:bg-slate-50/80 transition">
-                    <td className="py-3 px-4">
+                  <tr key={inv.id} className="hover:bg-[#181D28]/60 transition">
+                    <td className="py-2.5 px-3.5">
                       <button
                         onClick={() => setSelectedInvoiceId(inv.id)}
-                        className="font-mono font-bold text-sky-700 hover:text-sky-900 hover:underline"
+                        className="font-mono font-medium text-[#2DD4BF] hover:underline"
                       >
                         {inv.invoice_number}
                       </button>
                     </td>
-                    <td className="py-3 px-4 font-medium text-slate-900 max-w-[180px] truncate">
+                    <td className="py-2.5 px-3.5 font-medium text-[#E5E9F0] max-w-[180px] truncate">
                       {inv.vendor_name_raw}
                     </td>
-                    <td className="py-3 px-4 font-mono text-slate-600">
+                    <td className="py-2.5 px-3.5 font-mono text-[#8C96A8]">
                       {inv.po_number_raw || '—'}
                     </td>
-                    <td className="py-3 px-4 text-slate-600">
+                    <td className="py-2.5 px-3.5 font-mono text-[#8C96A8]">
                       {inv.invoice_date ? inv.invoice_date.split('T')[0] : '—'}
                     </td>
-                    <td className="py-3 px-4 text-right font-mono font-bold text-slate-900">
+                    <td className="py-2.5 px-3.5 text-right font-mono font-medium text-[#E5E9F0]">
                       ₹{(inv.total_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                     </td>
-                    <td className="py-3 px-4 text-center font-mono">
-                      <span className="text-[11px] font-semibold text-slate-700">
+                    <td className="py-2.5 px-3.5 text-center font-mono">
+                      <span className="text-[11px] text-[#C4CBD8]">
                         {inv.ocr_accuracy_score}%
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-center">
+                    <td className="py-2.5 px-3.5 text-center">
                       {inv.status === 'Validation Failed' ? (
-                        <span className="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-mono text-[#F87171] bg-[#EF4444]/15 border border-[#EF4444]/30 px-2 py-0.5 rounded-xs">
                           Failed
                         </span>
                       ) : (
-                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-mono text-[#2DD4BF] bg-[#0D9488]/15 border border-[#0D9488]/30 px-2 py-0.5 rounded-xs">
                           Passed
                         </span>
                       )}
                     </td>
-                    <td className="py-3 px-4 text-center font-mono">
-                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded ${
+                    <td className="py-2.5 px-3.5 text-center font-mono">
+                      <span className={`text-[10px] px-2 py-0.5 rounded-xs border ${
                         inv.match_status.includes('Matched')
-                          ? 'bg-sky-50 text-sky-800 border border-sky-200'
+                          ? 'bg-[#0D9488]/15 text-[#2DD4BF] border-[#0D9488]/30'
                           : inv.match_status.includes('Exception')
-                            ? 'bg-amber-50 text-amber-800 border border-amber-200'
-                            : 'bg-slate-100 text-slate-600'
+                            ? 'bg-[#F59E0B]/15 text-[#FBBF24] border-[#F59E0B]/30'
+                            : 'bg-[#1E2534] text-[#8C96A8] border-[#282F3E]'
                       }`}>
                         {inv.match_status}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-center">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                    <td className="py-2.5 px-3.5 text-center font-mono">
+                      <span className={`text-[10px] px-2 py-0.5 rounded-xs border ${
                         inv.status === 'Paid'
-                          ? 'bg-emerald-100 text-emerald-800'
+                          ? 'bg-[#2DD4BF]/15 text-[#2DD4BF] border-[#2DD4BF]/30'
                           : inv.status === 'Approved'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            ? 'bg-[#0D9488]/15 text-[#2DD4BF] border-[#0D9488]/30'
                             : inv.status === 'Pending Approval' || inv.status === 'Escalated'
-                              ? 'bg-amber-100 text-amber-800'
-                              : 'bg-slate-100 text-slate-700'
+                              ? 'bg-[#F59E0B]/15 text-[#FBBF24] border-[#F59E0B]/30'
+                              : 'bg-[#1E2534] text-[#8C96A8] border-[#282F3E]'
                       }`}>
                         {inv.status}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-center">
+                    <td className="py-2.5 px-3.5 text-center">
                       <button
                         onClick={() => setSelectedInvoiceId(inv.id)}
-                        className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-md font-medium text-[11px] transition"
+                        className="px-2 py-1 bg-[#1E2534] hover:bg-[#282F3E] text-[#E5E9F0] border border-[#2E374A] rounded-xs text-[11px] transition"
                       >
-                        Workbench →
+                        Desk →
                       </button>
                     </td>
                   </tr>
@@ -420,35 +423,36 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
   return (
     <div className="space-y-4">
       {/* Workbench Top Bar & Breadcrumb */}
-      <div className="bg-white px-5 py-3.5 rounded-xl border border-slate-200 shadow-2xs flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div className="bg-[#121620] px-4 py-3 rounded-sm border border-[#232936] flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div className="flex items-center space-x-3">
           <button
             onClick={() => setSelectedInvoiceId(null)}
-            className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition"
-            title="Back to All Invoices"
+            className="p-1.5 rounded-sm border border-[#282F3E] bg-[#181D28] text-[#8C96A8] hover:text-white hover:bg-[#1E2534] transition"
+            title="Return to directory"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
 
           <div>
             <div className="flex items-center space-x-2">
-              <span className="font-mono font-bold text-base text-slate-900">{invoice.invoice_number}</span>
-              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+              <span className="font-mono font-semibold text-sm text-[#E5E9F0]">{invoice.invoice_number}</span>
+              <span className={`text-[10px] font-mono px-2 py-0.5 rounded-xs border ${
                 invoice.status === 'Paid'
-                  ? 'bg-emerald-100 text-emerald-800'
+                  ? 'bg-[#2DD4BF]/15 text-[#2DD4BF] border-[#2DD4BF]/30'
                   : invoice.status === 'Approved'
-                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                    : 'bg-slate-100 text-slate-700'
+                    ? 'bg-[#0D9488]/15 text-[#2DD4BF] border-[#0D9488]/30'
+                    : 'bg-[#1E2534] text-[#8C96A8] border-[#282F3E]'
               }`}>
                 {invoice.status}
               </span>
-              <span className="text-[10px] font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+              <span className="text-[10px] font-mono text-[#7E8799] bg-[#181D28] px-2 py-0.5 rounded-xs border border-[#232936]">
                 OCR {invoice.ocr_accuracy_score}%
               </span>
             </div>
-            <div className="text-xs text-slate-500 mt-0.5">
-              <span>Vendor: <strong>{invoice.vendor_name_raw}</strong></span> • 
-              <span className="ml-1">PO: <strong>{invoice.po_number_raw || 'None'}</strong></span>
+            <div className="text-xs text-[#7E8799] mt-0.5 flex items-center space-x-2">
+              <span>Vendor: <strong className="text-[#C4CBD8]">{invoice.vendor_name_raw}</strong></span>
+              <span>/</span>
+              <span>PO: <strong className="font-mono text-[#C4CBD8]">{invoice.po_number_raw || 'None'}</strong></span>
             </div>
           </div>
         </div>
@@ -458,78 +462,78 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
           <button
             onClick={saveCorrections}
             disabled={saving}
-            className="flex items-center space-x-1.5 px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold shadow-xs transition disabled:opacity-50"
+            className="flex items-center space-x-1.5 px-3 py-1.5 bg-[#0D9488] hover:bg-[#0F766E] text-white rounded-sm text-xs font-medium transition disabled:opacity-50 shadow-2xs"
           >
             {saving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-            <span>Save & Re-Validate</span>
+            <span>Save & re-evaluate</span>
           </button>
         </div>
       </div>
 
       {statusMessage && (
-        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs flex items-center space-x-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+        <div className="p-3 bg-[#0D9488]/15 border border-[#0D9488]/30 rounded-sm text-[#2DD4BF] text-xs flex items-center space-x-2">
+          <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>{statusMessage}</span>
         </div>
       )}
 
       {/* Main Split Grid: Left Document Viewer / Right Inspection Panels */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        {/* LEFT PANE: Authentic Rendered Document Preview Sheet */}
-        <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200 shadow-2xs p-5 flex flex-col justify-between max-h-[750px] overflow-y-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        {/* LEFT PANE: Rendered Document Preview Sheet */}
+        <div className="lg:col-span-5 bg-[#121620] rounded-sm border border-[#232936] p-4 flex flex-col justify-between max-h-[750px] overflow-y-auto">
           <div className="space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 text-xs">
-              <div className="flex items-center space-x-2 text-slate-600 font-medium">
-                <FileText className="w-4 h-4 text-slate-500" />
-                <span className="font-mono truncate">{invoice.file_name || 'Tax_Invoice.pdf'}</span>
+            <div className="flex items-center justify-between pb-2.5 border-b border-[#1E2534] text-xs">
+              <div className="flex items-center space-x-2 text-[#C4CBD8] font-mono">
+                <FileText className="w-3.5 h-3.5 text-[#2DD4BF]" />
+                <span className="truncate">{invoice.file_name || 'Tax_Invoice.pdf'}</span>
               </div>
-              <span className="text-[10px] font-mono bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
+              <span className="text-[10px] font-mono bg-[#181D28] text-[#7E8799] px-1.5 py-0.5 rounded-xs border border-[#232936]">
                 Page 1 of 1
               </span>
             </div>
 
             {/* Rendered Invoice Sheet Paper Preview */}
-            <div className="bg-slate-50/80 border border-slate-200 rounded-lg p-5 font-sans text-xs space-y-4 shadow-inner">
+            <div className="bg-[#181D28] border border-[#282F3E] rounded-sm p-4 font-sans text-xs space-y-4 shadow-inner">
               {/* Header */}
-              <div className="flex justify-between items-start border-b border-slate-200 pb-3">
+              <div className="flex justify-between items-start border-b border-[#232936] pb-3">
                 <div>
-                  <div className="font-bold text-sm text-slate-900">{formData.vendor_name_raw}</div>
-                  <div className="text-[11px] text-slate-500 font-mono mt-0.5">GSTIN: {formData.vendor_gstin_raw}</div>
-                  <div className="text-[10px] text-slate-400">Tax Invoice / Billing Document</div>
+                  <div className="font-semibold text-sm text-[#E5E9F0]">{formData.vendor_name_raw}</div>
+                  <div className="text-[11px] text-[#7E8799] font-mono mt-0.5">GSTIN: {formData.vendor_gstin_raw}</div>
+                  <div className="text-[10px] text-[#64718A]">Tax invoice / legal billing document</div>
                 </div>
                 <div className="text-right">
-                  <div className="font-mono font-bold text-slate-800">{formData.invoice_number}</div>
-                  <div className="text-[11px] text-slate-500">Date: {formData.invoice_date || 'N/A'}</div>
-                  <div className="text-[11px] text-slate-500">Due: {formData.due_date || 'Net 30'}</div>
+                  <div className="font-mono font-medium text-[#2DD4BF]">{formData.invoice_number}</div>
+                  <div className="text-[11px] text-[#7E8799] font-mono">Date: {formData.invoice_date || 'N/A'}</div>
+                  <div className="text-[11px] text-[#7E8799] font-mono">Due: {formData.due_date || 'Net 30'}</div>
                 </div>
               </div>
 
               {/* Billed To */}
-              <div className="bg-white p-3 rounded border border-slate-200/80 text-[11px] space-y-0.5">
-                <span className="text-slate-400 font-bold uppercase text-[9px] block">Customer / Payer</span>
-                <div className="font-bold text-slate-800">Templegate Enterprise Solutions Ltd.</div>
-                <div className="text-slate-500 font-mono">GSTIN: 29AAACT9876Q1Z2 • Karnataka (29)</div>
-                <div className="text-slate-500">Purchase Order: {formData.po_number_raw || 'Direct Vendor PO'}</div>
+              <div className="bg-[#121620] p-3 rounded-sm border border-[#232936] text-[11px] space-y-0.5">
+                <span className="text-[#64718A] text-[10px] block font-mono">Customer / Payer</span>
+                <div className="font-medium text-[#E5E9F0]">Templegate Enterprise Solutions Ltd.</div>
+                <div className="text-[#8C96A8] font-mono">GSTIN: 29AAACT9876Q1Z2 / Karnataka (29)</div>
+                <div className="text-[#8C96A8] font-mono">Purchase order: {formData.po_number_raw || 'Direct Vendor PO'}</div>
               </div>
 
               {/* Line Items Preview */}
-              <div className="border border-slate-200 rounded overflow-hidden bg-white">
+              <div className="border border-[#232936] rounded-sm overflow-hidden bg-[#121620]">
                 <table className="w-full text-left text-[11px] border-collapse">
                   <thead>
-                    <tr className="bg-slate-100 text-slate-600 font-semibold border-b">
-                      <th className="py-1.5 px-2">Item</th>
-                      <th className="py-1.5 px-1 font-mono text-center">HSN</th>
-                      <th className="py-1.5 px-1 text-right">Qty</th>
-                      <th className="py-1.5 px-2 text-right">Amount</th>
+                    <tr className="bg-[#181D28] text-[#8C96A8] border-b border-[#232936]">
+                      <th className="py-1.5 px-2 font-medium">Item</th>
+                      <th className="py-1.5 px-1 font-mono text-center font-medium">HSN</th>
+                      <th className="py-1.5 px-1 text-right font-medium">Qty</th>
+                      <th className="py-1.5 px-2 text-right font-medium">Amount</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-[#1E2534]">
                     {formData.line_items.map((item, idx) => (
                       <tr key={idx}>
-                        <td className="py-1.5 px-2 text-slate-800 truncate max-w-[140px]">{item.description}</td>
-                        <td className="py-1.5 px-1 text-center font-mono text-slate-500">{item.hsn_code || '—'}</td>
-                        <td className="py-1.5 px-1 text-right font-mono">{item.quantity}</td>
-                        <td className="py-1.5 px-2 text-right font-mono font-medium text-slate-900">₹{(item.total_amount || 0).toLocaleString('en-IN')}</td>
+                        <td className="py-1.5 px-2 text-[#C4CBD8] truncate max-w-[140px]">{item.description}</td>
+                        <td className="py-1.5 px-1 text-center font-mono text-[#7E8799]">{item.hsn_code || '—'}</td>
+                        <td className="py-1.5 px-1 text-right font-mono text-[#C4CBD8]">{item.quantity}</td>
+                        <td className="py-1.5 px-2 text-right font-mono font-medium text-[#E5E9F0]">₹{(item.total_amount || 0).toLocaleString('en-IN')}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -537,19 +541,19 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
               </div>
 
               {/* Totals */}
-              <div className="pt-2 border-t border-slate-200 text-right space-y-1 text-xs">
-                <div className="text-slate-500">Subtotal: <strong className="font-mono text-slate-800">₹{(formData.subtotal || 0).toLocaleString('en-IN')}</strong></div>
-                <div className="text-slate-500">GST Tax: <strong className="font-mono text-slate-800">₹{(formData.tax_amount || 0).toLocaleString('en-IN')}</strong></div>
-                <div className="text-sm font-bold text-slate-900 pt-1 border-t">
-                  Grand Total: <span className="font-mono">₹{(formData.total_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+              <div className="pt-2 border-t border-[#232936] text-right space-y-1 text-xs">
+                <div className="text-[#7E8799]">Subtotal: <strong className="font-mono text-[#E5E9F0]">₹{(formData.subtotal || 0).toLocaleString('en-IN')}</strong></div>
+                <div className="text-[#7E8799]">GST Tax: <strong className="font-mono text-[#E5E9F0]">₹{(formData.tax_amount || 0).toLocaleString('en-IN')}</strong></div>
+                <div className="text-sm font-semibold text-[#E5E9F0] pt-1 border-t border-[#232936]">
+                  Grand Total: <span className="font-mono text-[#2DD4BF]">₹{(formData.total_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                 </div>
               </div>
             </div>
 
-            {/* OCR Raw Text Toggle Box */}
-            <details className="text-[11px] text-slate-500 bg-slate-50 rounded-lg p-2.5 border border-slate-200">
-              <summary className="font-semibold text-slate-700 cursor-pointer">View Raw OCR Text Extraction Stream</summary>
-              <pre className="mt-2 font-mono text-[10px] text-slate-600 whitespace-pre-wrap max-h-36 overflow-y-auto bg-white p-2 rounded border">
+            {/* OCR Raw Stream Toggle */}
+            <details className="text-[11px] text-[#7E8799] bg-[#181D28] rounded-sm p-2.5 border border-[#232936]">
+              <summary className="font-medium text-[#C4CBD8] cursor-pointer">View raw OCR stream</summary>
+              <pre className="mt-2 font-mono text-[10px] text-[#8C96A8] whitespace-pre-wrap max-h-36 overflow-y-auto bg-[#121620] p-2 rounded-sm border border-[#232936]">
                 {invoice.ocr_raw_text}
               </pre>
             </details>
@@ -557,33 +561,33 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
         </div>
 
         {/* RIGHT PANE: Unified Inspection Tabs */}
-        <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200 shadow-2xs flex flex-col">
+        <div className="lg:col-span-7 bg-[#121620] rounded-sm border border-[#232936] flex flex-col">
           {/* Sub Tabs */}
-          <div className="flex border-b border-slate-200 px-4 pt-3 overflow-x-auto text-xs font-medium">
+          <div className="flex border-b border-[#232936] px-4 pt-2.5 overflow-x-auto text-xs">
             {[
-              { id: 'data', label: 'Financials & Lines' },
-              { id: 'validation', label: 'Compliance Checks', count: invoice.validations?.length },
-              { id: 'matching', label: 'PO Reconciliation', badge: invoice.match_status },
-              { id: 'approval', label: 'Approval Workflow' },
-              { id: 'erp', label: 'ERP & Audit' },
+              { id: 'data', label: 'Financials & lines' },
+              { id: 'validation', label: 'Compliance rules', count: invoice.validations?.length },
+              { id: 'matching', label: 'PO reconciliation', badge: invoice.match_status },
+              { id: 'approval', label: 'Approval matrix' },
+              { id: 'erp', label: 'ERP & audit' },
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setWorkbenchTab(tab.id)}
-                className={`pb-3 px-3 font-semibold transition border-b-2 whitespace-nowrap flex items-center space-x-1.5 ${
+                className={`pb-2.5 px-3 font-medium transition border-b-2 whitespace-nowrap flex items-center space-x-1.5 text-xs ${
                   workbenchTab === tab.id
-                    ? 'border-slate-900 text-slate-900'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
+                    ? 'border-[#2DD4BF] text-white'
+                    : 'border-transparent text-[#7E8799] hover:text-[#C4CBD8]'
                 }`}
               >
                 <span>{tab.label}</span>
                 {tab.count !== undefined && (
-                  <span className="text-[10px] bg-slate-100 text-slate-600 font-mono px-1.5 py-0.2 rounded">
+                  <span className="text-[10px] bg-[#181D28] text-[#8C96A8] font-mono px-1.5 py-0.2 rounded-xs border border-[#232936]">
                     {tab.count}
                   </span>
                 )}
                 {tab.badge && (
-                  <span className="text-[10px] font-mono text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded">
+                  <span className="text-[10px] font-mono text-[#8C96A8] bg-[#181D28] px-1.5 py-0.2 rounded-xs border border-[#232936]">
                     {tab.badge.split(' ')[0]}
                   </span>
                 )}
@@ -591,63 +595,63 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
             ))}
           </div>
 
-          <div className="p-5 flex-1 overflow-y-auto max-h-[700px]">
+          <div className="p-4 flex-1 overflow-y-auto max-h-[700px]">
             {/* TAB 1: FINANCIALS & LINE ITEMS */}
             {workbenchTab === 'data' && (
-              <div className="space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
-                    <label className="text-[11px] font-semibold text-slate-600">Invoice Number</label>
+                    <label className="text-[11px] text-[#8C96A8]">Invoice number</label>
                     <input
                       type="text"
                       value={formData.invoice_number}
                       onChange={(e) => handleFieldChange('invoice_number', e.target.value)}
-                      className="mt-1 w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-mono font-medium text-slate-900 focus:bg-white focus:border-slate-900 outline-none"
+                      className="mt-1 w-full bg-[#181D28] border border-[#282F3E] rounded-sm px-3 py-1.5 text-xs font-mono text-[#E5E9F0] focus:border-[#0D9488] outline-none"
                     />
                   </div>
                   <div>
-                    <label className="text-[11px] font-semibold text-slate-600">PO Reference</label>
+                    <label className="text-[11px] text-[#8C96A8]">PO reference</label>
                     <input
                       type="text"
                       value={formData.po_number_raw}
                       onChange={(e) => handleFieldChange('po_number_raw', e.target.value)}
-                      className="mt-1 w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-mono font-medium text-slate-900 focus:bg-white focus:border-slate-900 outline-none"
+                      className="mt-1 w-full bg-[#181D28] border border-[#282F3E] rounded-sm px-3 py-1.5 text-xs font-mono text-[#E5E9F0] focus:border-[#0D9488] outline-none"
                     />
                   </div>
                   <div>
-                    <label className="text-[11px] font-semibold text-slate-600">Vendor Entity</label>
+                    <label className="text-[11px] text-[#8C96A8]">Vendor entity</label>
                     <input
                       type="text"
                       value={formData.vendor_name_raw}
                       onChange={(e) => handleFieldChange('vendor_name_raw', e.target.value)}
-                      className="mt-1 w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-medium text-slate-900 focus:bg-white focus:border-slate-900 outline-none"
+                      className="mt-1 w-full bg-[#181D28] border border-[#282F3E] rounded-sm px-3 py-1.5 text-xs text-[#E5E9F0] focus:border-[#0D9488] outline-none"
                     />
                   </div>
                   <div>
-                    <label className="text-[11px] font-semibold text-slate-600">Vendor GSTIN</label>
+                    <label className="text-[11px] text-[#8C96A8]">Vendor GSTIN</label>
                     <input
                       type="text"
                       value={formData.vendor_gstin_raw}
                       onChange={(e) => handleFieldChange('vendor_gstin_raw', e.target.value)}
-                      className="mt-1 w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-mono uppercase font-medium text-slate-900 focus:bg-white focus:border-slate-900 outline-none"
+                      className="mt-1 w-full bg-[#181D28] border border-[#282F3E] rounded-sm px-3 py-1.5 text-xs font-mono text-[#E5E9F0] focus:border-[#0D9488] outline-none uppercase"
                     />
                   </div>
                   <div>
-                    <label className="text-[11px] font-semibold text-slate-600">Invoice Date</label>
+                    <label className="text-[11px] text-[#8C96A8]">Invoice date</label>
                     <input
                       type="date"
                       value={formData.invoice_date}
                       onChange={(e) => handleFieldChange('invoice_date', e.target.value)}
-                      className="mt-1 w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:bg-white focus:border-slate-900 outline-none"
+                      className="mt-1 w-full bg-[#181D28] border border-[#282F3E] rounded-sm px-3 py-1.5 text-xs font-mono text-[#E5E9F0] focus:border-[#0D9488] outline-none"
                     />
                   </div>
                   <div>
-                    <label className="text-[11px] font-semibold text-slate-600">Due Date</label>
+                    <label className="text-[11px] text-[#8C96A8]">Due date</label>
                     <input
                       type="date"
                       value={formData.due_date}
                       onChange={(e) => handleFieldChange('due_date', e.target.value)}
-                      className="mt-1 w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:bg-white focus:border-slate-900 outline-none"
+                      className="mt-1 w-full bg-[#181D28] border border-[#282F3E] rounded-sm px-3 py-1.5 text-xs font-mono text-[#E5E9F0] focus:border-[#0D9488] outline-none"
                     />
                   </div>
                 </div>
@@ -655,40 +659,40 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
                 {/* Line Items Table */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-800">Itemized Material & Service Lines</span>
+                    <span className="text-xs font-semibold text-[#E5E9F0]">Itemized material & service lines</span>
                     <button
                       type="button"
                       onClick={addLineItem}
-                      className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-[11px] font-medium"
+                      className="px-2 py-1 bg-[#181D28] hover:bg-[#1E2534] text-[#C4CBD8] border border-[#282F3E] rounded-xs text-[11px] font-medium"
                     >
-                      + Add Item
+                      + Add line
                     </button>
                   </div>
 
-                  <div className="overflow-x-auto border border-slate-200 rounded-lg">
+                  <div className="overflow-x-auto border border-[#232936] rounded-sm">
                     <table className="w-full text-left text-xs border-collapse">
                       <thead>
-                        <tr className="bg-slate-50 text-[10px] font-semibold text-slate-500 uppercase border-b">
-                          <th className="py-2 px-2.5">#</th>
-                          <th className="py-2 px-2.5">Description</th>
-                          <th className="py-2 px-2 font-mono">HSN</th>
-                          <th className="py-2 px-2 text-right">Qty</th>
-                          <th className="py-2 px-2 text-right">Rate</th>
-                          <th className="py-2 px-2 text-right">Tax%</th>
-                          <th className="py-2 px-2.5 text-right">Total</th>
+                        <tr className="bg-[#181D28] text-[10px] text-[#8C96A8] border-b border-[#232936]">
+                          <th className="py-2 px-2.5 font-medium">#</th>
+                          <th className="py-2 px-2.5 font-medium">Description</th>
+                          <th className="py-2 px-2 font-mono font-medium">HSN</th>
+                          <th className="py-2 px-2 text-right font-medium">Qty</th>
+                          <th className="py-2 px-2 text-right font-medium">Rate</th>
+                          <th className="py-2 px-2 text-right font-medium">Tax%</th>
+                          <th className="py-2 px-2.5 text-right font-medium">Total</th>
                           <th className="py-2 px-1 text-center"></th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100">
+                      <tbody className="divide-y divide-[#1E2534]">
                         {formData.line_items.map((item, idx) => (
                           <tr key={idx}>
-                            <td className="py-2 px-2.5 text-slate-400 font-mono text-[11px]">{idx + 1}</td>
+                            <td className="py-2 px-2.5 text-[#64718A] font-mono text-[11px]">{idx + 1}</td>
                             <td className="py-2 px-2.5">
                               <input
                                 type="text"
                                 value={item.description}
                                 onChange={(e) => handleLineItemChange(idx, 'description', e.target.value)}
-                                className="w-full bg-transparent border-b border-transparent hover:border-slate-300 focus:border-slate-800 outline-none text-xs text-slate-800 font-medium"
+                                className="w-full bg-transparent border-b border-transparent hover:border-[#282F3E] focus:border-[#0D9488] outline-none text-xs text-[#E5E9F0]"
                               />
                             </td>
                             <td className="py-2 px-2">
@@ -696,7 +700,7 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
                                 type="text"
                                 value={item.hsn_code || ''}
                                 onChange={(e) => handleLineItemChange(idx, 'hsn_code', e.target.value)}
-                                className="w-14 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-slate-800 outline-none text-xs font-mono text-slate-600"
+                                className="w-14 bg-transparent border-b border-transparent hover:border-[#282F3E] focus:border-[#0D9488] outline-none text-xs font-mono text-[#8C96A8]"
                               />
                             </td>
                             <td className="py-2 px-2 text-right">
@@ -704,7 +708,7 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
                                 type="number"
                                 value={item.quantity}
                                 onChange={(e) => handleLineItemChange(idx, 'quantity', e.target.value)}
-                                className="w-12 text-right bg-transparent border-b border-transparent hover:border-slate-300 focus:border-slate-800 outline-none text-xs font-mono text-slate-900"
+                                className="w-12 text-right bg-transparent border-b border-transparent hover:border-[#282F3E] focus:border-[#0D9488] outline-none text-xs font-mono text-[#E5E9F0]"
                               />
                             </td>
                             <td className="py-2 px-2 text-right">
@@ -712,7 +716,7 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
                                 type="number"
                                 value={item.unit_price}
                                 onChange={(e) => handleLineItemChange(idx, 'unit_price', e.target.value)}
-                                className="w-16 text-right bg-transparent border-b border-transparent hover:border-slate-300 focus:border-slate-800 outline-none text-xs font-mono text-slate-900"
+                                className="w-16 text-right bg-transparent border-b border-transparent hover:border-[#282F3E] focus:border-[#0D9488] outline-none text-xs font-mono text-[#E5E9F0]"
                               />
                             </td>
                             <td className="py-2 px-2 text-right">
@@ -720,17 +724,17 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
                                 type="number"
                                 value={item.tax_rate}
                                 onChange={(e) => handleLineItemChange(idx, 'tax_rate', e.target.value)}
-                                className="w-10 text-right bg-transparent border-b border-transparent hover:border-slate-300 focus:border-slate-800 outline-none text-xs font-mono text-slate-900"
+                                className="w-10 text-right bg-transparent border-b border-transparent hover:border-[#282F3E] focus:border-[#0D9488] outline-none text-xs font-mono text-[#E5E9F0]"
                               />
                             </td>
-                            <td className="py-2 px-2.5 text-right font-mono font-bold text-slate-900">
+                            <td className="py-2 px-2.5 text-right font-mono font-medium text-[#2DD4BF]">
                               ₹{(item.total_amount || 0).toLocaleString('en-IN')}
                             </td>
                             <td className="py-2 px-1 text-center">
                               <button
                                 type="button"
                                 onClick={() => removeLineItem(idx)}
-                                className="text-slate-400 hover:text-red-600 p-1"
+                                className="text-[#64718A] hover:text-[#EF4444] p-1 transition"
                               >
                                 <Trash2 className="w-3 h-3" />
                               </button>
@@ -743,18 +747,18 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
                 </div>
 
                 {/* Subtotal & Balance */}
-                <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 flex justify-between items-center text-xs">
+                <div className="bg-[#181D28] p-3 rounded-sm border border-[#232936] flex justify-between items-center text-xs">
                   <div>
-                    <span className="text-slate-500">Taxable: </span>
-                    <strong className="font-mono text-slate-800">₹{(formData.subtotal || 0).toLocaleString('en-IN')}</strong>
+                    <span className="text-[#7E8799]">Taxable base: </span>
+                    <strong className="font-mono text-[#E5E9F0]">₹{(formData.subtotal || 0).toLocaleString('en-IN')}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-500">Taxes: </span>
-                    <strong className="font-mono text-slate-800">₹{(formData.tax_amount || 0).toLocaleString('en-IN')}</strong>
+                    <span className="text-[#7E8799]">Taxes: </span>
+                    <strong className="font-mono text-[#E5E9F0]">₹{(formData.tax_amount || 0).toLocaleString('en-IN')}</strong>
                   </div>
                   <div className="text-right">
-                    <span className="text-slate-500">Gross Total: </span>
-                    <span className="text-base font-bold font-mono text-slate-900">
+                    <span className="text-[#7E8799]">Gross total: </span>
+                    <span className="text-sm font-semibold font-mono text-[#2DD4BF]">
                       ₹{(formData.total_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
@@ -765,41 +769,39 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
             {/* TAB 2: COMPLIANCE CHECKS */}
             {workbenchTab === 'validation' && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-900">Automated Audit & Compliance Rules</h3>
-                    <p className="text-xs text-slate-500">5-point validation verifying arithmetic balance, duplicates, and tax rules</p>
-                  </div>
+                <div>
+                  <h3 className="text-xs font-semibold text-[#E5E9F0]">5-point automated validation results</h3>
+                  <p className="text-[11px] text-[#7E8799]">Verifies arithmetic balance, duplicate hashes, GSTIN compliance, and vendor master status</p>
                 </div>
 
-                <div className="space-y-2.5">
+                <div className="space-y-2">
                   {invoice.validations?.map((v) => (
                     <div 
                       key={v.id} 
-                      className={`p-3.5 rounded-lg border text-xs space-y-1 ${
+                      className={`p-3 rounded-sm border text-xs space-y-1 ${
                         v.status === 'Passed' 
-                          ? 'border-slate-200 bg-slate-50/50' 
+                          ? 'border-[#232936] bg-[#181D28]' 
                           : v.status === 'Warning' 
-                            ? 'border-amber-300 bg-amber-50/40' 
-                            : 'border-red-300 bg-red-50/40'
+                            ? 'border-[#F59E0B]/30 bg-[#F59E0B]/10' 
+                            : 'border-[#EF4444]/30 bg-[#EF4444]/10'
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2 font-bold text-slate-800">
+                        <div className="flex items-center space-x-2 font-medium text-[#E5E9F0]">
                           {v.status === 'Passed' ? (
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                            <CheckCircle2 className="w-4 h-4 text-[#2DD4BF]" />
                           ) : (
-                            <AlertTriangle className="w-4 h-4 text-amber-600" />
+                            <AlertTriangle className="w-4 h-4 text-[#F59E0B]" />
                           )}
                           <span>{v.rule_name}</span>
                         </div>
-                        <span className={`text-[10px] font-bold px-2 py-0.2 rounded-full ${
-                          v.status === 'Passed' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
+                        <span className={`text-[10px] font-mono px-2 py-0.2 rounded-xs border ${
+                          v.status === 'Passed' ? 'bg-[#0D9488]/15 text-[#2DD4BF] border-[#0D9488]/30' : 'bg-[#EF4444]/15 text-[#F87171] border-[#EF4444]/30'
                         }`}>
                           {v.status}
                         </span>
                       </div>
-                      <p className="text-slate-600 text-[11px] leading-relaxed">{v.message}</p>
+                      <p className="text-[#8C96A8] text-[11px] leading-relaxed">{v.message}</p>
                     </div>
                   ))}
                 </div>
@@ -811,76 +813,76 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-sm font-bold text-slate-900">Multi-Way PO & Delivery Receipt Matching</h3>
-                    <p className="text-xs text-slate-500">Reconcile Billed quantities and rates against Purchase Orders</p>
+                    <h3 className="text-xs font-semibold text-[#E5E9F0]">Multi-way PO & delivery receipt matching</h3>
+                    <p className="text-[11px] text-[#7E8799]">Reconcile invoiced quantities and unit rates against purchase orders</p>
                   </div>
                   
                   <div className="flex items-center space-x-2">
-                    <div className="flex items-center space-x-1 bg-slate-50 border rounded-lg px-2 py-1 text-xs font-mono">
-                      <span className="text-slate-500">Tol:</span>
+                    <div className="flex items-center space-x-1 bg-[#181D28] border border-[#282F3E] rounded-sm px-2 py-1 text-xs font-mono">
+                      <span className="text-[#7E8799]">Tol:</span>
                       <input
                         type="number"
                         value={tolerance}
                         onChange={(e) => setTolerance(e.target.value)}
-                        className="w-10 bg-transparent text-right outline-none font-bold text-slate-800"
+                        className="w-8 bg-transparent text-right outline-none font-medium text-[#E5E9F0]"
                       />
-                      <span>%</span>
+                      <span className="text-[#7E8799]">%</span>
                     </div>
 
                     <button
                       onClick={() => executeMatching('3-Way')}
                       disabled={matching}
-                      className="px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs font-medium shadow-xs"
+                      className="px-2.5 py-1 bg-[#0D9488] hover:bg-[#0F766E] text-white rounded-sm text-xs font-medium transition"
                     >
-                      Run 3-Way Match
+                      Run 3-way match
                     </button>
                   </div>
                 </div>
 
                 {matchResult ? (
                   <div className="space-y-3">
-                    <div className={`p-3 rounded-lg border flex items-center justify-between text-xs ${
+                    <div className={`p-3 rounded-sm border flex items-center justify-between text-xs ${
                       matchResult.within_tolerance && matchResult.status === 'Matched'
-                        ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
-                        : 'bg-amber-50 border-amber-300 text-amber-900'
+                        ? 'bg-[#0D9488]/15 border-[#0D9488]/30 text-[#2DD4BF]'
+                        : 'bg-[#F59E0B]/15 border-[#F59E0B]/30 text-[#FBBF24]'
                     }`}>
                       <div>
-                        <strong>{matchResult.match_type} Reconciliation: {matchResult.status}</strong>
-                        <div className="text-[11px] opacity-80">
-                          Variance: ₹{(matchResult.variance_amount || 0).toLocaleString('en-IN')} (Allowed tolerance: ±{matchResult.tolerance_applied}%)
+                        <strong>{matchResult.match_type} reconciliation: {matchResult.status}</strong>
+                        <div className="text-[11px] opacity-80 font-mono mt-0.5">
+                          Variance: ₹{(matchResult.variance_amount || 0).toLocaleString('en-IN')} (Allowed: ±{matchResult.tolerance_applied}%)
                         </div>
                       </div>
-                      <span className="font-mono text-xs font-bold">
+                      <span className="font-mono text-xs text-[#E5E9F0]">
                         PO #{matchResult.details_json?.po_number || invoice.po_number_raw || 'None'}
                       </span>
                     </div>
 
                     {lineComparisons.length > 0 && (
-                      <div className="border border-slate-200 rounded-lg overflow-x-auto">
+                      <div className="border border-[#232936] rounded-sm overflow-x-auto">
                         <table className="w-full text-left text-xs border-collapse">
                           <thead>
-                            <tr className="bg-slate-50 text-[10px] font-semibold text-slate-500 uppercase border-b">
-                              <th className="py-2 px-2.5">Item</th>
-                              <th className="py-2 px-2 text-center">Inv Qty</th>
-                              <th className="py-2 px-2 text-center">PO Qty</th>
-                              <th className="py-2 px-2 text-center">GRN Qty</th>
-                              <th className="py-2 px-2 text-right">Inv Rate</th>
-                              <th className="py-2 px-2 text-right">PO Rate</th>
-                              <th className="py-2 px-2 text-center">Variance</th>
+                            <tr className="bg-[#181D28] text-[10px] text-[#8C96A8] border-b border-[#232936]">
+                              <th className="py-2 px-2.5 font-medium">Item</th>
+                              <th className="py-2 px-2 text-center font-medium">Inv qty</th>
+                              <th className="py-2 px-2 text-center font-medium">PO qty</th>
+                              <th className="py-2 px-2 text-center font-medium">GRN qty</th>
+                              <th className="py-2 px-2 text-right font-medium">Inv rate</th>
+                              <th className="py-2 px-2 text-right font-medium">PO rate</th>
+                              <th className="py-2 px-2 text-center font-medium">Variance</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100 font-mono text-[11px]">
+                          <tbody className="divide-y divide-[#1E2534] font-mono text-[11px]">
                             {lineComparisons.map((lc, idx) => (
                               <tr key={idx}>
-                                <td className="py-2 px-2.5 font-sans font-medium text-slate-800 truncate max-w-[120px]">{lc.item_description}</td>
-                                <td className="py-2 px-2 text-center text-sky-800">{lc.invoice_qty}</td>
-                                <td className="py-2 px-2 text-center text-slate-700">{lc.po_qty}</td>
-                                <td className="py-2 px-2 text-center text-emerald-700">{lc.grn_qty !== null ? lc.grn_qty : '—'}</td>
-                                <td className="py-2 px-2 text-right">₹{lc.invoice_unit_price}</td>
-                                <td className="py-2 px-2 text-right">₹{lc.po_unit_price}</td>
+                                <td className="py-2 px-2.5 font-sans font-medium text-[#C4CBD8] truncate max-w-[120px]">{lc.item_description}</td>
+                                <td className="py-2 px-2 text-center text-[#2DD4BF]">{lc.invoice_qty}</td>
+                                <td className="py-2 px-2 text-center text-[#C4CBD8]">{lc.po_qty}</td>
+                                <td className="py-2 px-2 text-center text-[#8C96A8]">{lc.grn_qty !== null ? lc.grn_qty : '—'}</td>
+                                <td className="py-2 px-2 text-right text-[#C4CBD8]">₹{lc.invoice_unit_price}</td>
+                                <td className="py-2 px-2 text-right text-[#C4CBD8]">₹{lc.po_unit_price}</td>
                                 <td className="py-2 px-2 text-center">
-                                  <span className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${
-                                    lc.price_within_tolerance ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
+                                  <span className={`text-[10px] px-1.5 py-0.2 rounded-xs font-mono ${
+                                    lc.price_within_tolerance ? 'bg-[#0D9488]/15 text-[#2DD4BF]' : 'bg-[#EF4444]/15 text-[#F87171]'
                                   }`}>
                                     {lc.price_diff_percent}%
                                   </span>
@@ -893,8 +895,8 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
                     )}
                   </div>
                 ) : (
-                  <div className="p-6 text-center text-slate-400 text-xs border border-dashed rounded-lg">
-                    Reconciliation has not been executed yet. Click "Run 3-Way Match".
+                  <div className="p-6 text-center text-[#7E8799] text-xs border border-dashed border-[#282F3E] rounded-sm">
+                    Reconciliation has not been executed yet. Click "Run 3-way match".
                   </div>
                 )}
               </div>
@@ -904,54 +906,54 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
             {workbenchTab === 'approval' && (
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">Approval Governance & Policy Matrix</h3>
-                  <p className="text-xs text-slate-500">Sign-off trail and departmental budget approval</p>
+                  <h3 className="text-xs font-semibold text-[#E5E9F0]">Approval governance & policy matrix</h3>
+                  <p className="text-[11px] text-[#7E8799]">Sign-off trail and departmental budget sign-off</p>
                 </div>
 
-                <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 text-xs space-y-2">
+                <div className="bg-[#181D28] p-3 rounded-sm border border-[#232936] text-xs space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Current Step:</span>
-                    <strong className="text-slate-800">Tier {invoice.current_approval_step} - {invoice.assigned_to_role}</strong>
+                    <span className="text-[#7E8799]">Current step:</span>
+                    <strong className="text-[#E5E9F0] font-mono">Tier {invoice.current_approval_step} - {invoice.assigned_to_role}</strong>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Approval Status:</span>
-                    <span className="font-bold text-amber-700">{invoice.status}</span>
+                    <span className="text-[#7E8799]">Status:</span>
+                    <span className="font-mono text-[#FBBF24]">{invoice.status}</span>
                   </div>
                 </div>
 
                 {/* Comment & Actions */}
                 <div className="space-y-3 pt-2">
-                  <label className="text-xs font-semibold text-slate-700">Audit Remarks / Sign-off Comments</label>
+                  <label className="text-xs font-medium text-[#C4CBD8]">Audit remarks / sign-off comments</label>
                   <input
                     type="text"
                     value={approvalComment}
                     onChange={(e) => setApprovalComment(e.target.value)}
                     placeholder="Enter approval note or exception sign-off reasoning..."
-                    className="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs outline-none focus:border-slate-800"
+                    className="w-full bg-[#181D28] border border-[#282F3E] rounded-sm px-3 py-2 text-xs text-[#E5E9F0] outline-none focus:border-[#0D9488]"
                   />
 
                   <div className="flex items-center justify-end space-x-2 pt-2">
                     <button
                       onClick={() => handleApprovalAction('REJECT')}
                       disabled={actionLoading === 'REJECT'}
-                      className="px-3.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-lg text-xs font-semibold"
+                      className="px-3 py-1.5 bg-[#EF4444]/15 hover:bg-[#EF4444]/25 text-[#F87171] border border-[#EF4444]/30 rounded-sm text-xs font-medium transition"
                     >
                       Reject
                     </button>
                     <button
                       onClick={() => handleApprovalAction('ESCALATE')}
                       disabled={actionLoading === 'ESCALATE'}
-                      className="px-3.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-lg text-xs font-semibold"
+                      className="px-3 py-1.5 bg-[#F59E0B]/15 hover:bg-[#F59E0B]/25 text-[#FBBF24] border border-[#F59E0B]/30 rounded-sm text-xs font-medium transition"
                     >
                       Escalate
                     </button>
                     <button
                       onClick={() => handleApprovalAction('APPROVE')}
                       disabled={actionLoading === 'APPROVE'}
-                      className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold shadow-xs flex items-center gap-1.5"
+                      className="px-3.5 py-1.5 bg-[#0D9488] hover:bg-[#0F766E] text-white rounded-sm text-xs font-medium shadow-2xs flex items-center gap-1.5 transition"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Approve Invoice</span>
+                      <span>Approve invoice</span>
                     </button>
                   </div>
                 </div>
@@ -962,26 +964,26 @@ export const InvoiceDetailPage = ({ selectedInvoiceId, setSelectedInvoiceId, set
             {workbenchTab === 'erp' && (
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">General Ledger & ERP Posting</h3>
-                  <p className="text-xs text-slate-500">ERP synchronization status and historical changes</p>
+                  <h3 className="text-xs font-semibold text-[#E5E9F0]">General ledger & ERP sync</h3>
+                  <p className="text-[11px] text-[#7E8799]">ERP posting status and historical payload generation</p>
                 </div>
 
-                <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 text-xs space-y-2">
+                <div className="bg-[#181D28] p-3 rounded-sm border border-[#232936] text-xs space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">ERP Sync Status:</span>
-                    <strong className="text-slate-800">{invoice.erp_sync_status}</strong>
+                    <span className="text-[#7E8799]">ERP status:</span>
+                    <strong className="text-[#E5E9F0] font-mono">{invoice.erp_sync_status}</strong>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">ERP Document Reference:</span>
-                    <strong className="font-mono text-sky-700">{invoice.erp_reference || 'Pending Sync'}</strong>
+                    <span className="text-[#7E8799]">Voucher ref:</span>
+                    <strong className="font-mono text-[#2DD4BF]">{invoice.erp_reference || 'Pending Sync'}</strong>
                   </div>
                 </div>
 
                 <button
                   onClick={() => setActiveTab('erp')}
-                  className="px-3.5 py-2 bg-slate-900 text-white rounded-lg text-xs font-semibold hover:bg-slate-800 transition"
+                  className="px-3 py-1.5 bg-[#181D28] hover:bg-[#1E2534] text-[#E5E9F0] border border-[#282F3E] rounded-sm text-xs font-medium transition"
                 >
-                  Manage ERP Gateways & XML Vouchers →
+                  Manage ERP gateways & vouchers →
                 </button>
               </div>
             )}

@@ -49,7 +49,7 @@ export const ERPSyncPage = () => {
       const res = await api.post(`/erp/sync/${invoiceId}`, null, {
         params: { target_system: selectedTarget }
       });
-      setMessage(`Successfully synced Invoice to ${selectedTarget}! Reference: ${res.data.erp_reference}`);
+      setMessage(`Successfully synced invoice to ${selectedTarget}. Voucher reference: ${res.data.erp_reference}`);
       fetchData();
     } catch (err) {
       alert(err.response?.data?.detail || 'ERP synchronization failed.');
@@ -61,87 +61,90 @@ export const ERPSyncPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#232936] pb-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">General Ledger & ERP Integrations</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Synchronize verified AP vouchers directly into Tally Prime, SAP S/4HANA, Zoho Books, or QuickBooks.
+          <div className="flex items-center space-x-2">
+            <span className="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+            <h1 className="text-lg font-semibold text-[#E5E9F0] tracking-tight">General Ledger & ERP Integrations</h1>
+          </div>
+          <p className="text-xs text-[#7E8799] mt-0.5">
+            Synchronize verified AP vouchers directly into Tally Prime, SAP S/4HANA, Zoho Books, or QuickBooks
           </p>
         </div>
 
         {/* Target System Selector */}
         <div className="flex items-center space-x-2">
-          <label className="text-xs font-semibold text-slate-700">Target System:</label>
+          <label className="text-xs text-[#8C96A8]">Target system:</label>
           <select
             value={selectedTarget}
             onChange={(e) => setSelectedTarget(e.target.value)}
-            className="bg-white border border-slate-300 text-xs font-semibold text-slate-900 rounded-lg px-3 py-1.5 outline-none hover:border-slate-800 shadow-2xs"
+            className="bg-[#121620] border border-[#232936] text-xs font-mono text-[#E5E9F0] rounded-sm px-3 py-1.5 outline-none cursor-pointer"
           >
-            <option value="Tally Prime">Tally Prime (XML Voucher)</option>
-            <option value="SAP">SAP S/4HANA (BAPI_INCOMINGINVOICE)</option>
-            <option value="Zoho Books">Zoho Books (Vendor Bill REST)</option>
-            <option value="QuickBooks">QuickBooks Online (Bill Object)</option>
+            <option value="Tally Prime" className="bg-[#181D28]">Tally Prime (XML Voucher)</option>
+            <option value="SAP" className="bg-[#181D28]">SAP S/4HANA (BAPI_INCOMINGINVOICE)</option>
+            <option value="Zoho Books" className="bg-[#181D28]">Zoho Books (Vendor Bill REST)</option>
+            <option value="QuickBooks" className="bg-[#181D28]">QuickBooks Online (Bill Object)</option>
           </select>
         </div>
       </div>
 
       {message && (
-        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs flex items-center space-x-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+        <div className="p-3 bg-[#0D9488]/15 border border-[#0D9488]/30 rounded-sm text-[#2DD4BF] text-xs flex items-center space-x-2">
+          <CheckCircle2 className="w-4 h-4 text-[#2DD4BF] shrink-0" />
           <span>{message}</span>
         </div>
       )}
 
       {/* Invoices Sync Table */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-3.5">
-        <div>
-          <h2 className="text-sm font-bold text-slate-900">AP Vouchers Eligible for GL Posting</h2>
-          <p className="text-xs text-slate-500">Authorized and paid invoices queued for automatic general ledger balance updates</p>
+      <div className="bg-[#121620] p-4 rounded-sm border border-[#232936] space-y-3">
+        <div className="border-b border-[#1E2534] pb-2.5">
+          <h2 className="text-xs font-semibold text-[#E5E9F0]">AP vouchers eligible for general ledger posting</h2>
+          <p className="text-[11px] text-[#7E8799]">Authorized and settled invoices queued for automatic general ledger updates</p>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center p-12">
-            <RefreshCw className="w-7 h-7 text-sky-600 animate-spin" />
+            <RefreshCw className="w-6 h-6 text-[#0D9488] animate-spin" />
           </div>
         ) : (
-          <div className="overflow-x-auto border border-slate-200 rounded-lg">
+          <div className="overflow-x-auto border border-[#232936] rounded-sm">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-slate-50 text-[10px] font-semibold text-slate-500 uppercase border-b border-slate-200">
-                  <th className="py-2.5 px-3">Invoice #</th>
-                  <th className="py-2.5 px-3">Vendor Entity</th>
-                  <th className="py-2.5 px-3 text-right">Gross Total</th>
-                  <th className="py-2.5 px-3 text-center">AP Status</th>
-                  <th className="py-2.5 px-3 text-center">GL Sync Status</th>
-                  <th className="py-2.5 px-3 text-center">ERP Voucher Ref</th>
-                  <th className="py-2.5 px-3 text-center">Action</th>
+                <tr className="bg-[#181D28] text-[10px] text-[#8C96A8] border-b border-[#232936]">
+                  <th className="py-2.5 px-3 font-medium">Invoice #</th>
+                  <th className="py-2.5 px-3 font-medium">Vendor entity</th>
+                  <th className="py-2.5 px-3 text-right font-medium">Gross total</th>
+                  <th className="py-2.5 px-3 text-center font-medium">AP status</th>
+                  <th className="py-2.5 px-3 text-center font-medium">GL sync status</th>
+                  <th className="py-2.5 px-3 text-center font-medium">ERP voucher ref</th>
+                  <th className="py-2.5 px-3 text-center font-medium">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#1E2534]">
                 {invoices.map((inv) => {
                   const isEligible = ['Approved', 'In Payment', 'Paid'].includes(inv.status);
                   const isSynced = inv.erp_sync_status === 'Synced';
 
                   return (
-                    <tr key={inv.id} className="hover:bg-slate-50/50">
-                      <td className="py-2.5 px-3 font-mono font-bold text-slate-900">{inv.invoice_number}</td>
-                      <td className="py-2.5 px-3 font-medium text-slate-800">{inv.vendor_name_raw}</td>
-                      <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900">
+                    <tr key={inv.id} className="hover:bg-[#181D28]/60 transition">
+                      <td className="py-2.5 px-3 font-mono font-medium text-[#2DD4BF]">{inv.invoice_number}</td>
+                      <td className="py-2.5 px-3 font-medium text-[#E5E9F0]">{inv.vendor_name_raw}</td>
+                      <td className="py-2.5 px-3 text-right font-mono font-medium text-[#E5E9F0]">
                         ₹{(inv.total_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                       </td>
                       <td className="py-2.5 px-3 text-center">
-                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-xs bg-[#181D28] text-[#8C96A8] border border-[#232936]">
                           {inv.status}
                         </span>
                       </td>
                       <td className="py-2.5 px-3 text-center">
-                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                          isSynced ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-amber-50 text-amber-800 border border-amber-200'
+                        <span className={`text-[10px] font-mono px-2 py-0.5 rounded-xs border ${
+                          isSynced ? 'bg-[#0D9488]/15 text-[#2DD4BF] border-[#0D9488]/30' : 'bg-[#F59E0B]/15 text-[#FBBF24] border-[#F59E0B]/30'
                         }`}>
                           {isSynced ? 'Synced' : 'Pending'}
                         </span>
                       </td>
-                      <td className="py-2.5 px-3 text-center font-mono font-bold text-sky-800">
+                      <td className="py-2.5 px-3 text-center font-mono text-[#2DD4BF]">
                         {inv.erp_reference || '—'}
                       </td>
                       <td className="py-2.5 px-3 text-center">
@@ -149,17 +152,17 @@ export const ERPSyncPage = () => {
                           <button
                             onClick={() => handleSyncInvoice(inv.id)}
                             disabled={syncingId === inv.id}
-                            className="px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold shadow-xs transition disabled:opacity-50 flex items-center gap-1 mx-auto"
+                            className="px-2.5 py-1 bg-[#181D28] hover:bg-[#1E2534] border border-[#282F3E] text-[#E5E9F0] rounded-sm text-xs font-medium transition disabled:opacity-50 flex items-center gap-1 mx-auto"
                           >
                             {syncingId === inv.id ? (
-                              <RefreshCw className="w-3 h-3 animate-spin" />
+                              <RefreshCw className="w-3 h-3 animate-spin text-[#2DD4BF]" />
                             ) : (
-                              <Send className="w-3 h-3" />
+                              <Send className="w-3 h-3 text-[#2DD4BF]" />
                             )}
-                            <span>{isSynced ? 'Re-Sync' : `Sync to ${selectedTarget}`}</span>
+                            <span>{isSynced ? 'Re-sync' : `Post to ${selectedTarget}`}</span>
                           </button>
                         ) : (
-                          <span className="text-slate-400 text-[11px]">Requires Approval</span>
+                          <span className="text-[#64718A] text-[11px] font-mono">Requires approval</span>
                         )}
                       </td>
                     </tr>
@@ -172,37 +175,37 @@ export const ERPSyncPage = () => {
       </div>
 
       {/* Sync Log & Payload Inspector */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-3.5">
-        <div>
-          <h2 className="text-sm font-bold text-slate-900">ERP Transmission Log & Gateway History</h2>
-          <p className="text-xs text-slate-500">Inspect the exact payloads delivered to ERP endpoints</p>
+      <div className="bg-[#121620] p-4 rounded-sm border border-[#232936] space-y-3">
+        <div className="border-b border-[#1E2534] pb-2.5">
+          <h2 className="text-xs font-semibold text-[#E5E9F0]">ERP transmission logs & gateway history</h2>
+          <p className="text-[11px] text-[#7E8799]">Inspect the structural payload schemas dispatched to target accounting engines</p>
         </div>
 
         {erpLogs.length === 0 ? (
-          <div className="p-6 text-center text-slate-400 bg-slate-50 rounded-lg border border-slate-200 text-xs">
+          <div className="p-6 text-center text-[#7E8799] bg-[#181D28] rounded-sm border border-[#232936] text-xs font-mono">
             No ERP sync logs recorded yet.
           </div>
         ) : (
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             {erpLogs.slice(0, 5).map((log) => (
-              <div key={log.id} className="p-3.5 border border-slate-200 rounded-lg bg-slate-50/50 flex items-center justify-between text-xs">
+              <div key={log.id} className="p-3 border border-[#232936] rounded-sm bg-[#181D28] flex items-center justify-between text-xs">
                 <div>
                   <div className="flex items-center space-x-2">
-                    <span className="font-bold text-slate-900">{log.target_system}</span>
-                    <span className="text-emerald-800 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.2 rounded text-[10px]">
+                    <span className="font-medium text-[#E5E9F0]">{log.target_system}</span>
+                    <span className="text-[#2DD4BF] font-mono bg-[#0D9488]/15 border border-[#0D9488]/30 px-2 py-0.2 rounded-xs text-[10px]">
                       {log.sync_status}
                     </span>
-                    <span className="text-slate-400 font-mono text-[11px]">{log.synced_at}</span>
+                    <span className="text-[#64718A] font-mono text-[11px]">{log.synced_at}</span>
                   </div>
-                  <p className="text-slate-600 mt-0.5">{log.response}</p>
+                  <p className="text-[#8C96A8] mt-0.5 text-[11px]">{log.response}</p>
                 </div>
 
                 <button
                   onClick={() => setPayloadModal(log.payload)}
-                  className="px-2.5 py-1.5 bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 font-mono text-[11px] rounded-lg transition flex items-center gap-1 shadow-2xs"
+                  className="px-2.5 py-1 bg-[#121620] hover:bg-[#1E2534] border border-[#282F3E] text-[#C4CBD8] font-mono text-[11px] rounded-sm transition flex items-center gap-1"
                 >
-                  <Code className="w-3.5 h-3.5 text-slate-600" />
-                  <span>Inspect Payload</span>
+                  <Code className="w-3.5 h-3.5 text-[#2DD4BF]" />
+                  <span>Inspect payload</span>
                 </button>
               </div>
             ))}
@@ -212,21 +215,21 @@ export const ERPSyncPage = () => {
 
       {/* Payload Modal */}
       {payloadModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-2xs flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-950 text-white rounded-xl max-w-2xl w-full p-5 shadow-2xl space-y-3.5 max-h-[85vh] flex flex-col border border-slate-800">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
-              <h2 className="text-xs font-bold text-sky-400 font-mono">ERP Transmission Data Payload</h2>
-              <button onClick={() => setPayloadModal(null)} className="text-slate-400 hover:text-white font-bold">
+        <div className="fixed inset-0 bg-[#0E1117]/80 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-[#121620] rounded-sm max-w-2xl w-full p-4 shadow-2xl space-y-3 max-h-[85vh] flex flex-col border border-[#282F3E]">
+            <div className="flex items-center justify-between border-b border-[#232936] pb-2.5">
+              <h2 className="text-xs font-semibold text-[#2DD4BF] font-mono">ERP transmission payload schema</h2>
+              <button onClick={() => setPayloadModal(null)} className="text-[#7E8799] hover:text-[#E5E9F0]">
                 ✕
               </button>
             </div>
-            <pre className="flex-1 overflow-auto bg-slate-900 p-4 rounded-lg text-xs font-mono text-emerald-400 border border-slate-800">
+            <pre className="flex-1 overflow-auto bg-[#181D28] p-3.5 rounded-sm text-xs font-mono text-[#2DD4BF] border border-[#232936]">
               {JSON.stringify(payloadModal, null, 2)}
             </pre>
             <div className="flex justify-end pt-1">
               <button
                 onClick={() => setPayloadModal(null)}
-                className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold"
+                className="px-3 py-1.5 bg-[#181D28] hover:bg-[#1E2534] border border-[#282F3E] text-[#E5E9F0] rounded-sm text-xs font-medium"
               >
                 Close
               </button>

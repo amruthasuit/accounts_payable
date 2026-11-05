@@ -98,28 +98,31 @@ export const PaymentsPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#232936] pb-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Payment Disbursement Runs</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Prepare banking payment runs, export NEFT/RTGS clearing files, and execute Host-to-Host direct bank settlements.
+          <div className="flex items-center space-x-2">
+            <span className="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+            <h1 className="text-lg font-semibold text-[#E5E9F0] tracking-tight">Payment Disbursement Runs</h1>
+          </div>
+          <p className="text-xs text-[#7E8799] mt-0.5">
+            Prepare banking payment runs, export NEFT/RTGS clearing files, and execute Host-to-Host direct bank settlements
           </p>
         </div>
       </div>
 
       {message && (
-        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs flex items-center space-x-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+        <div className="p-3 bg-[#0D9488]/15 border border-[#0D9488]/30 rounded-sm text-[#2DD4BF] text-xs flex items-center space-x-2">
+          <CheckCircle2 className="w-4 h-4 text-[#2DD4BF] shrink-0" />
           <span>{message}</span>
         </div>
       )}
 
       {/* Approved Invoices Awaiting Payment Run */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-3.5">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="bg-[#121620] p-4 rounded-sm border border-[#232936] space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#1E2534] pb-2.5">
           <div>
-            <h2 className="text-sm font-bold text-slate-900">Approved Invoices Ready for Payment ({approvedInvoices.length})</h2>
-            <p className="text-xs text-slate-500">Group authorized invoices into a banking disbursement batch</p>
+            <h2 className="text-xs font-semibold text-[#E5E9F0]">Approved invoices ready for payment ({approvedInvoices.length})</h2>
+            <p className="text-[11px] text-[#7E8799]">Group authorized invoices into a banking disbursement batch</p>
           </div>
 
           {approvedInvoices.length > 0 && (
@@ -127,7 +130,7 @@ export const PaymentsPage = () => {
               <select
                 value={formatType}
                 onChange={(e) => setFormatType(e.target.value)}
-                className="bg-white border border-slate-300 text-xs text-slate-800 rounded-lg px-2.5 py-1.5 outline-none font-medium shadow-2xs"
+                className="bg-[#181D28] border border-[#282F3E] text-xs text-[#E5E9F0] rounded-sm px-2.5 py-1.5 outline-none font-mono"
               >
                 <option value="NEFT_RTGS_CSV">NEFT / RTGS Corporate CSV (HDFC/ICICI)</option>
                 <option value="ISO20022_XML">ISO 20022 pain.001 XML</option>
@@ -136,60 +139,60 @@ export const PaymentsPage = () => {
               <button
                 onClick={handleCreateBatch}
                 disabled={selectedInvoiceIds.length === 0 || actionLoading === 'create_batch'}
-                className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg shadow-xs disabled:opacity-50 transition flex items-center gap-1.5"
+                className="px-3 py-1.5 bg-[#0D9488] hover:bg-[#0F766E] text-white font-medium text-xs rounded-sm shadow-2xs disabled:opacity-50 transition flex items-center gap-1.5"
               >
                 <CreditCard className="w-3.5 h-3.5" />
-                <span>Create Payment Batch ({selectedInvoiceIds.length})</span>
+                <span>Create payment batch ({selectedInvoiceIds.length})</span>
               </button>
             </div>
           )}
         </div>
 
         {approvedInvoices.length === 0 ? (
-          <div className="p-6 text-center text-slate-400 bg-slate-50 rounded-lg border border-slate-200 text-xs">
+          <div className="p-6 text-center text-[#7E8799] bg-[#181D28] rounded-sm border border-[#232936] text-xs font-mono">
             No approved invoices pending payment. Invoices must be signed-off by the designated approver before disbursement.
           </div>
         ) : (
-          <div className="overflow-x-auto border border-slate-200 rounded-lg">
+          <div className="overflow-x-auto border border-[#232936] rounded-sm">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-slate-50 text-[10px] font-semibold text-slate-500 uppercase border-b border-slate-200">
-                  <th className="py-2.5 px-3 w-8">
+                <tr className="bg-[#181D28] text-[10px] text-[#8C96A8] border-b border-[#232936]">
+                  <th className="py-2 px-3 w-8">
                     <input
                       type="checkbox"
                       checked={selectedInvoiceIds.length === approvedInvoices.length && approvedInvoices.length > 0}
                       onChange={handleSelectAll}
-                      className="rounded text-slate-900 cursor-pointer"
+                      className="rounded-xs cursor-pointer accent-[#0D9488]"
                     />
                   </th>
-                  <th className="py-2.5 px-3">Invoice #</th>
-                  <th className="py-2.5 px-3">Vendor Entity</th>
-                  <th className="py-2.5 px-3">Beneficiary Account</th>
-                  <th className="py-2.5 px-3 text-right">Gross Amount</th>
-                  <th className="py-2.5 px-3 text-center">Authorization</th>
+                  <th className="py-2 px-3 font-medium">Invoice #</th>
+                  <th className="py-2 px-3 font-medium">Vendor entity</th>
+                  <th className="py-2 px-3 font-medium">Beneficiary account</th>
+                  <th className="py-2 px-3 text-right font-medium">Gross amount</th>
+                  <th className="py-2 px-3 text-center font-medium">Authorization</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#1E2534]">
                 {approvedInvoices.map((inv) => (
-                  <tr key={inv.id} className="hover:bg-slate-50/50">
+                  <tr key={inv.id} className="hover:bg-[#181D28]/60 transition">
                     <td className="py-2.5 px-3">
                       <input
                         type="checkbox"
                         checked={selectedInvoiceIds.includes(inv.id)}
                         onChange={() => handleToggleSelect(inv.id)}
-                        className="rounded text-slate-900 cursor-pointer"
+                        className="rounded-xs cursor-pointer accent-[#0D9488]"
                       />
                     </td>
-                    <td className="py-2.5 px-3 font-mono font-bold text-slate-900">{inv.invoice_number}</td>
-                    <td className="py-2.5 px-3 font-medium text-slate-800">{inv.vendor_name_raw}</td>
-                    <td className="py-2.5 px-3 text-slate-600 font-mono text-[11px]">
-                      {inv.vendor?.bank_accounts?.[0]?.bank_name || 'HDFC Bank'} • A/C: {inv.vendor?.bank_accounts?.[0]?.account_number || '5020...'}
+                    <td className="py-2.5 px-3 font-mono font-medium text-[#2DD4BF]">{inv.invoice_number}</td>
+                    <td className="py-2.5 px-3 font-medium text-[#E5E9F0]">{inv.vendor_name_raw}</td>
+                    <td className="py-2.5 px-3 text-[#8C96A8] font-mono text-[11px]">
+                      {inv.vendor?.bank_accounts?.[0]?.bank_name || 'HDFC Bank'} / A/C: {inv.vendor?.bank_accounts?.[0]?.account_number || '5020...'}
                     </td>
-                    <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900">
+                    <td className="py-2.5 px-3 text-right font-mono font-medium text-[#E5E9F0]">
                       ₹{(inv.total_amount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                     </td>
                     <td className="py-2.5 px-3 text-center">
-                      <span className="text-[10px] font-medium text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] font-mono text-[#2DD4BF] bg-[#0D9488]/15 border border-[#0D9488]/30 px-2 py-0.5 rounded-xs">
                         Approved
                       </span>
                     </td>
@@ -202,39 +205,39 @@ export const PaymentsPage = () => {
       </div>
 
       {/* Payment Batches & Bank Settlement History */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-3.5">
-        <div>
-          <h2 className="text-sm font-bold text-slate-900">Disbursement Runs & Settlement Records</h2>
-          <p className="text-xs text-slate-500">Monitor bank payout execution, download transmission files, and inspect remittance advice</p>
+      <div className="bg-[#121620] p-4 rounded-sm border border-[#232936] space-y-3">
+        <div className="border-b border-[#1E2534] pb-2.5">
+          <h2 className="text-xs font-semibold text-[#E5E9F0]">Disbursement runs & settlement records</h2>
+          <p className="text-[11px] text-[#7E8799]">Monitor bank payout execution, download transmission files, and inspect remittance advice</p>
         </div>
 
         {batches.length === 0 ? (
-          <div className="p-6 text-center text-slate-400 bg-slate-50 rounded-lg border border-slate-200 text-xs">
+          <div className="p-6 text-center text-[#7E8799] bg-[#181D28] rounded-sm border border-[#232936] text-xs font-mono">
             No payment runs created yet.
           </div>
         ) : (
-          <div className="space-y-3.5">
+          <div className="space-y-3">
             {batches.map((batch) => (
-              <div key={batch.id} className="border border-slate-200 rounded-xl p-4 bg-white hover:border-slate-300 transition space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-100 pb-3">
+              <div key={batch.id} className="border border-[#232936] rounded-sm p-3.5 bg-[#181D28] hover:border-[#282F3E] transition space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#232936] pb-2.5">
                   <div className="flex items-center space-x-2.5">
-                    <span className="font-mono font-bold text-xs text-slate-900">{batch.batch_reference}</span>
-                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                    <span className="font-mono font-medium text-xs text-[#E5E9F0]">{batch.batch_reference}</span>
+                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded-xs border ${
                       batch.status === 'Settled'
-                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                        : 'bg-amber-50 text-amber-800 border border-amber-200'
+                        ? 'bg-[#0D9488]/15 text-[#2DD4BF] border-[#0D9488]/30'
+                        : 'bg-[#F59E0B]/15 text-[#FBBF24] border-[#F59E0B]/30'
                     }`}>
-                      {batch.status === 'Settled' ? 'Settled' : batch.status}
+                      {batch.status}
                     </span>
-                    <span className="text-[11px] text-slate-500">
-                      {batch.invoice_count} Invoices via {batch.bank_name}
+                    <span className="text-[11px] text-[#8C96A8] font-mono">
+                      {batch.invoice_count} invoices via {batch.bank_name}
                     </span>
                   </div>
 
                   <div className="flex items-center space-x-3">
                     <div className="text-right">
-                      <span className="text-[10px] text-slate-400 uppercase font-semibold">Run Total</span>
-                      <div className="text-sm font-bold font-mono text-slate-900">
+                      <span className="text-[10px] text-[#64718A] block font-mono">Run total</span>
+                      <div className="text-sm font-semibold font-mono text-[#E5E9F0]">
                         ₹{batch.total_amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                       </div>
                     </div>
@@ -243,7 +246,7 @@ export const PaymentsPage = () => {
                       href={`/api/payments/batches/${batch.id}/download-file`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs rounded-lg transition flex items-center gap-1 shadow-2xs"
+                      className="px-2.5 py-1.5 bg-[#121620] hover:bg-[#1E2534] border border-[#282F3E] text-[#C4CBD8] font-medium text-xs rounded-sm transition flex items-center gap-1"
                     >
                       <Download className="w-3.5 h-3.5" />
                       <span>Bank CSV</span>
@@ -253,14 +256,14 @@ export const PaymentsPage = () => {
                       <button
                         onClick={() => handleExecutePayout(batch.id)}
                         disabled={actionLoading === `execute_${batch.id}`}
-                        className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg shadow-xs transition flex items-center gap-1.5"
+                        className="px-3 py-1.5 bg-[#0D9488] hover:bg-[#0F766E] text-white font-medium text-xs rounded-sm shadow-2xs transition flex items-center gap-1.5"
                       >
                         {actionLoading === `execute_${batch.id}` ? (
                           <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                         ) : (
                           <Send className="w-3.5 h-3.5" />
                         )}
-                        <span>Execute Bank Payout (API)</span>
+                        <span>Execute payout (Host-to-Host)</span>
                       </button>
                     )}
                   </div>
@@ -270,42 +273,42 @@ export const PaymentsPage = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="text-[10px] uppercase font-semibold text-slate-400 border-b">
-                        <th className="py-1.5">Tx ID</th>
-                        <th className="py-1.5">Invoice #</th>
-                        <th className="py-1.5">Mode</th>
-                        <th className="py-1.5">Bank UTR Reference</th>
-                        <th className="py-1.5 text-right">Amount</th>
-                        <th className="py-1.5 text-center">Remittance Advice</th>
+                      <tr className="text-[10px] text-[#8C96A8] border-b border-[#232936]">
+                        <th className="py-1.5 font-medium">Tx ID</th>
+                        <th className="py-1.5 font-medium">Invoice #</th>
+                        <th className="py-1.5 font-medium">Mode</th>
+                        <th className="py-1.5 font-medium">Bank UTR reference</th>
+                        <th className="py-1.5 text-right font-medium">Amount</th>
+                        <th className="py-1.5 text-center font-medium">Remittance advice</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 font-mono text-[11px]">
+                    <tbody className="divide-y divide-[#232936] font-mono text-[11px]">
                       {batch.transactions.map((tx) => (
-                        <tr key={tx.id} className="hover:bg-slate-50/50">
-                          <td className="py-2 text-slate-400">#{tx.id}</td>
-                          <td className="py-2 font-bold text-slate-800">INV-{tx.invoice_id}</td>
+                        <tr key={tx.id} className="hover:bg-[#121620]/60">
+                          <td className="py-2 text-[#64718A]">#{tx.id}</td>
+                          <td className="py-2 font-medium text-[#C4CBD8]">INV-{tx.invoice_id}</td>
                           <td className="py-2">
-                            <span className="text-[10px] font-sans font-medium bg-slate-100 px-1.5 py-0.2 rounded text-slate-700">
+                            <span className="text-[10px] font-mono bg-[#121620] px-1.5 py-0.2 rounded-xs border border-[#232936] text-[#8C96A8]">
                               {tx.payment_method}
                             </span>
                           </td>
-                          <td className="py-2 font-bold text-sky-800">
-                            {tx.utr_number || 'Pending Settlement'}
+                          <td className="py-2 text-[#2DD4BF]">
+                            {tx.utr_number || 'Pending settlement'}
                           </td>
-                          <td className="py-2 text-right font-bold text-slate-900">
+                          <td className="py-2 text-right font-medium text-[#E5E9F0]">
                             ₹{tx.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                           </td>
                           <td className="py-2 text-center font-sans">
                             {tx.status === 'Settled' ? (
                               <button
                                 onClick={() => setAdviceModalUrl(`/api/payments/advice/${tx.id}`)}
-                                className="text-xs text-sky-700 hover:text-sky-900 font-medium underline inline-flex items-center gap-1"
+                                className="text-xs text-[#2DD4BF] hover:underline font-medium inline-flex items-center gap-1"
                               >
-                                <span>Advice Sheet</span>
+                                <span>Advice sheet</span>
                                 <ExternalLink className="w-3 h-3" />
                               </button>
                             ) : (
-                              <span className="text-slate-400 text-[11px]">—</span>
+                              <span className="text-[#64718A] text-[11px]">—</span>
                             )}
                           </td>
                         </tr>
@@ -321,25 +324,25 @@ export const PaymentsPage = () => {
 
       {/* Remittance Advice Modal */}
       {adviceModalUrl && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-2xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl max-w-3xl w-full p-5 shadow-2xl space-y-3.5 max-h-[90vh] flex flex-col border border-slate-200">
-            <div className="flex items-center justify-between border-b pb-2.5">
-              <h2 className="text-sm font-bold text-slate-900">Settlement Remittance Advice</h2>
-              <button onClick={() => setAdviceModalUrl(null)} className="text-slate-400 hover:text-slate-600 font-bold">
+        <div className="fixed inset-0 bg-[#0E1117]/80 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-[#121620] rounded-sm max-w-3xl w-full p-4 shadow-2xl space-y-3 max-h-[90vh] flex flex-col border border-[#282F3E]">
+            <div className="flex items-center justify-between border-b border-[#232936] pb-2.5">
+              <h2 className="text-xs font-semibold text-[#E5E9F0]">Settlement remittance advice sheet</h2>
+              <button onClick={() => setAdviceModalUrl(null)} className="text-[#7E8799] hover:text-[#E5E9F0]">
                 ✕
               </button>
             </div>
-            <div className="flex-1 overflow-hidden border border-slate-200 rounded-lg">
+            <div className="flex-1 overflow-hidden border border-[#232936] rounded-sm">
               <iframe
                 src={adviceModalUrl}
                 title="Remittance Advice"
-                className="w-full h-[520px] border-none"
+                className="w-full h-[520px] border-none bg-white"
               />
             </div>
             <div className="flex justify-end pt-1">
               <button
                 onClick={() => setAdviceModalUrl(null)}
-                className="px-3.5 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-semibold"
+                className="px-3.5 py-1.5 bg-[#181D28] hover:bg-[#1E2534] border border-[#282F3E] text-[#E5E9F0] rounded-sm text-xs font-medium"
               >
                 Close
               </button>
