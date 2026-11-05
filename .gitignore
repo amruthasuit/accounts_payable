@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+backend/venv/
+venv/
+__pycache__/
+*.pyc
+
+# Database & Storage
+*.db
+backend/*.db
+backend/uploads/invoices/*
+!backend/uploads/invoices/.gitkeep
+backend/uploads/payment_advices/*
+!backend/uploads/payment_advices/.gitkeep
+
+# Build Outputs
+dist/
+frontend/dist/
+.vercel/
+
+# Environment & Logs
+.env
+*.log

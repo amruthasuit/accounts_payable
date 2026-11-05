@@ -1,0 +1,7 @@
+node_modules
+.git
+backend/venv
+test_venv
+*.db
+backend/*.db
+.env
