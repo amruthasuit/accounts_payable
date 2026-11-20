@@ -2,6 +2,8 @@ import os
 from pydantic_settings import BaseSettings
 
 is_vercel = os.getenv("VERCEL") == "1" or os.getenv("NOW_REGION") is not None
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(BASE_DIR, "ap_automation.db").replace("\\", "/")
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "AP Automation Platform"
@@ -9,13 +11,12 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api"
     
     # Base Directory
-    BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    BASE_DIR: str = BASE_DIR
 
-    # Database
-    # On Vercel serverless, root directory is read-only. We default SQLite to /tmp if not using Postgres
+    # Database: Always resolve absolute path so working directory does not fracture the DB
     DATABASE_URL: str = os.getenv(
         "DATABASE_URL", 
-        "sqlite:////tmp/ap_automation.db" if is_vercel else "sqlite:///./ap_automation.db"
+        "sqlite:////tmp/ap_automation.db" if is_vercel else f"sqlite:///{DB_PATH}"
     )
     
     # Upload Directories (Writable in /tmp on Vercel)
