@@ -1,7 +1,7 @@
 import re
 from typing import List, Dict, Any, Tuple
 from sqlalchemy.orm import Session
-from ..models import Invoice, Vendor, ValidationResult
+from ..models import Invoice, Vendor, ValidationResult, InvoiceLineItem
 from ..config import settings
 
 class ValidationService:
@@ -17,13 +17,19 @@ class ValidationService:
         
         Returns (is_all_passed, results_list).
         """
+        db.flush()
+        try:
+            db.refresh(invoice)
+        except Exception:
+            pass
+
         # Clear prior validation results for this invoice
         db.query(ValidationResult).filter(ValidationResult.invoice_id == invoice.id).delete()
         
         results = []
         
         # 1. Mandatory Fields Validation
-        v1 = ValidationService._check_mandatory_fields(invoice)
+        v1 = ValidationService._check_mandatory_fields(db, invoice)
         results.append(v1)
         
         # 2. Duplicate Invoice Validation
@@ -35,7 +41,7 @@ class ValidationService:
         results.append(v3)
         
         # 4. Amount Mathematical Validation
-        v4 = ValidationService._check_amount_math(invoice)
+        v4 = ValidationService._check_amount_math(db, invoice)
         results.append(v4)
         
         # 5. Vendor Master Validation
@@ -68,7 +74,7 @@ class ValidationService:
         return all_passed, results
 
     @staticmethod
-    def _check_mandatory_fields(invoice: Invoice) -> Dict[str, Any]:
+    def _check_mandatory_fields(db: Session, invoice: Invoice) -> Dict[str, Any]:
         missing = []
         if not invoice.invoice_number or invoice.invoice_number.strip() == "":
             missing.append("Invoice Number")
@@ -78,7 +84,12 @@ class ValidationService:
             missing.append("Vendor Name")
         if invoice.total_amount is None or invoice.total_amount <= 0:
             missing.append("Grand Total Amount")
-        if not invoice.line_items or len(invoice.line_items) == 0:
+
+        line_count = 0
+        if invoice.id:
+            line_count = db.query(InvoiceLineItem).filter(InvoiceLineItem.invoice_id == invoice.id).count()
+
+        if (not invoice.line_items or len(invoice.line_items) == 0) and line_count == 0:
             missing.append("Line Items (Materials)")
 
         if missing:
@@ -224,8 +235,13 @@ class ValidationService:
         }
 
     @staticmethod
-    def _check_amount_math(invoice: Invoice) -> Dict[str, Any]:
-        lines_sum = sum(item.total_amount for item in invoice.line_items)
+    def _check_amount_math(db: Session, invoice: Invoice) -> Dict[str, Any]:
+        line_items = invoice.line_items
+        if not line_items or len(line_items) == 0:
+            if invoice.id:
+                line_items = db.query(InvoiceLineItem).filter(InvoiceLineItem.invoice_id == invoice.id).all()
+
+        lines_sum = sum(item.total_amount for item in (line_items or []))
         subtotal = invoice.subtotal or 0.0
         tax_total = invoice.tax_amount or (invoice.cgst_amount + invoice.sgst_amount + invoice.igst_amount)
         discount = invoice.discount_amount or 0.0
@@ -254,7 +270,7 @@ class ValidationService:
                 }
             }
 
-        if len(invoice.line_items) > 0 and diff_lines > 2.0:
+        if line_items and len(line_items) > 0 and diff_lines > 2.0:
             return {
                 "rule_code": "AMOUNT_MATH",
                 "rule_name": "Amount Calculation Validation",

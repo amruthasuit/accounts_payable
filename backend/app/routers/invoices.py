@@ -98,6 +98,11 @@ async def upload_invoices(
             db.add(line_item)
 
         # Run automated validation immediately
+        db.flush()
+        try:
+            db.refresh(invoice)
+        except Exception:
+            pass
         ValidationService.run_all_validations(db, invoice)
 
         # Audit Log
@@ -178,6 +183,11 @@ async def ingest_email_invoice(
             total_amount=item.get("total_amount", 70800.0)
         ))
 
+    db.flush()
+    try:
+        db.refresh(invoice)
+    except Exception:
+        pass
     ValidationService.run_all_validations(db, invoice)
     
     audit = AuditLog(
@@ -256,6 +266,11 @@ def update_invoice(invoice_id: int, update_data: InvoiceUpdate, db: Session = De
             ))
 
     # Re-run validation
+    db.flush()
+    try:
+        db.refresh(invoice)
+    except Exception:
+        pass
     ValidationService.run_all_validations(db, invoice)
     
     # Audit log
